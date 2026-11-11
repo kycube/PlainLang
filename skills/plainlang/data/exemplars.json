@@ -1,0 +1,774 @@
+[
+ {
+  "id": "X01",
+  "identified_by": "Plain English Campaign, Golden Bull (boohoo)",
+  "kind": "bad",
+  "rewrite": "Sell more to existing customers with a cheap, low-risk setup. (Paraphrase of the Campaign's translation.)",
+  "rule_ids": [
+   "WORD-07",
+   "WORD-01"
+  ],
+  "source_url": "https://plainenglish.co.uk/golden-bull-award-winners-2021",
+  "text": "increase the share of wallet opportunity through a new capital light and low risk operating model",
+  "verbatim": true,
+  "why": "Jargon stacked into noun phrases; no actor, no concrete action.",
+  "year": "2021"
+ },
+ {
+  "id": "X02",
+  "identified_by": "Plain English Campaign, Golden Bull (NHS England)",
+  "kind": "bad",
+  "rewrite": "Groups of healthcare providers working together will help local health systems do their main job. (Paraphrase of the Campaign's translation.)",
+  "rule_ids": [
+   "WORD-07",
+   "CLR-08"
+  ],
+  "source_url": "https://plainenglish.co.uk/golden-bull-award-winners-2021",
+  "text": "provider collaboratives will be a key component in enabling ICSs to deliver their core purpose",
+  "verbatim": true,
+  "why": "Undefined acronym, abstract jargon ('key component', 'deliver their core purpose').",
+  "year": "2021"
+ },
+ {
+  "id": "X03",
+  "identified_by": "Plain English Campaign, Golden Bull (Pensions Dashboards Programme)",
+  "kind": "bad",
+  "rewrite": "We have started buying the main computer system.",
+  "rule_ids": [
+   "ACT-02",
+   "CLR-07"
+  ],
+  "source_url": "https://plainenglish.co.uk/golden-bull-award-winners-2021",
+  "text": "With our procurement of the principal digital architecture underway",
+  "verbatim": true,
+  "why": "Nominalization ('procurement') and inflated words hide a simple action.",
+  "year": "2021"
+ },
+ {
+  "id": "X04",
+  "identified_by": "Plain English Campaign, Golden Bull (SP Energy Networks)",
+  "kind": "bad",
+  "rewrite": "If you own a generator, you must update its protection equipment by 1 September 2022.",
+  "rule_ids": [
+   "CLR-08",
+   "ACT-03"
+  ],
+  "source_url": "https://plainenglish.co.uk/golden-bull-award-winners-2021",
+  "text": "EREC G59 requirements must be implemented by generation owners",
+  "verbatim": true,
+  "why": "Undefined codes; passive voice hides who must act.",
+  "year": "2021"
+ },
+ {
+  "id": "X05",
+  "identified_by": "Plain English Campaign, Golden Bull (jungle.com)",
+  "kind": "bad",
+  "rewrite": "We're selling fewer products.",
+  "rule_ids": [
+   "FILL-07"
+  ],
+  "source_url": "https://worldwidewords.org/pec2003.html",
+  "text": "We are currently in the process of consolidating our product range",
+  "verbatim": true,
+  "why": "Filler ('currently in the process of') and euphemism.",
+  "year": "2003"
+ },
+ {
+  "id": "X06",
+  "identified_by": "Plain English Campaign, Golden Bull (Lloyds pharmacy)",
+  "kind": "bad",
+  "rewrite": "Our pharmacists read prescriptions quickly because they know the drugs well.",
+  "rule_ids": [
+   "WORD-02",
+   "CLR-06"
+  ],
+  "source_url": "https://worldwidewords.org/pec2003.html",
+  "text": "The cognitive process that staff will go through when interpreting prescriptions",
+  "verbatim": true,
+  "why": "Abstract, inflated phrasing for a simple claim.",
+  "year": "2003"
+ },
+ {
+  "id": "X07",
+  "identified_by": "Center for Plain Language, Grand WonderMark (Charles Schwab)",
+  "kind": "bad",
+  "rewrite": "",
+  "rule_ids": [
+   "CLR-07",
+   "WORD-07"
+  ],
+  "source_url": "https://centerforplainlanguage.org/center-for-plain-language-honors-march-of-dimes-with-the-grand-clearmark-award-charles-schwab-captures-the-grand-wondermark-award/",
+  "text": "(Magazine ad in which judges estimated nearly 90% of the language was legalese.)",
+  "verbatim": false,
+  "why": "Asked for trust while making it impossible to tell what the firm would do with the reader's money.",
+  "year": "2013"
+ },
+ {
+  "id": "X08",
+  "identified_by": "Center for Plain Language, WonderMark (Department of Homeland Security)",
+  "kind": "bad",
+  "rewrite": "",
+  "rule_ids": [
+   "ORD-02",
+   "CLR-14"
+  ],
+  "source_url": "https://centerforplainlanguage.org/center-for-plain-language-honors-march-of-dimes-with-the-grand-clearmark-award-charles-schwab-captures-the-grand-wondermark-award/",
+  "text": "(Deferred-action form whose opening paragraph held an 81-word sentence.)",
+  "verbatim": false,
+  "why": "Bureaucratic density; a judge said it barely read as English.",
+  "year": "2013"
+ },
+ {
+  "id": "X09",
+  "identified_by": "Center for Plain Language, WonderMark (1&1 Internet)",
+  "kind": "bad",
+  "rewrite": "",
+  "rule_ids": [
+   "CLR-01",
+   "CLR-08"
+  ],
+  "source_url": "https://centerforplainlanguage.org/center-for-plain-language-honors-march-of-dimes-with-the-grand-clearmark-award-charles-schwab-captures-the-grand-wondermark-award/",
+  "text": "(Webhosting upgrade letter full of technical terms, sent to non-programmer customers.)",
+  "verbatim": false,
+  "why": "Wrong audience: a submitter with a law degree couldn't follow it.",
+  "year": "2013"
+ },
+ {
+  "id": "X10",
+  "identified_by": "Denis Dutton, Bad Writing Contest, first prize (Judith Butler, in diacritics)",
+  "kind": "bad",
+  "rewrite": "",
+  "rule_ids": [
+   "ACT-02",
+   "ORD-02",
+   "CLR-09"
+  ],
+  "source_url": "https://en.wikipedia.org/wiki/Denis_Dutton",
+  "text": "(A one-sentence passage of academic theory built from chains of abstract nouns.)",
+  "verbatim": false,
+  "why": "Run by the journal Philosophy and Literature to expose scholarship it called pretentious gibberish. Butler defended the passage in the New York Times.",
+  "year": "1998"
+ },
+ {
+  "id": "X11",
+  "identified_by": "Helen Sword, 'Zombie Nouns,' New York Times",
+  "kind": "bad",
+  "rewrite": "Writers who overload their sentences with abstract nouns tend to sound pompous. (Paraphrase of Sword's rewrite.)",
+  "rule_ids": [
+   "ACT-02",
+   "ACT-01"
+  ],
+  "source_url": "https://yale-nus.edu.sg/academics/wp-content/uploads/sites/8/2021/12/Nominalizations-Are-Zombie-Nouns-The-New-York-Times.pdf",
+  "text": "The proliferation of nominalizations in a discursive formation ...",
+  "verbatim": true,
+  "why": "Seven nominalizations, no human actor, no action. Sword built it as a deliberate bad example.",
+  "year": "2012"
+ },
+ {
+  "id": "X12",
+  "identified_by": "Steven Pinker, The Sense of Style",
+  "kind": "bad",
+  "rewrite": "Tap someone's wrist, elbow, and shoulder in quick succession, and they feel one tap hopping up the arm.",
+  "rule_ids": [
+   "CLR-09",
+   "CLR-06"
+  ],
+  "source_url": "https://www.psychologicalscience.org/observer/the-curse-of-knowledge-pinker-describes-a-key-cause-of-bad-writing",
+  "text": "(A psychology-journal sentence about 'stimulus' and 'poststimulus events.')",
+  "verbatim": false,
+  "why": "Curse of knowledge: technical abstraction where a concrete description was available.",
+  "year": "2014"
+ },
+ {
+  "id": "X13",
+  "identified_by": "George Orwell, Politics and the English Language",
+  "kind": "pair",
+  "rewrite": "I returned, and saw under the sun, that the race is not to the swift, nor the battle to the strong.",
+  "rule_ids": [
+   "CLR-06",
+   "CLR-07"
+  ],
+  "source_url": "https://en.wikipedia.org/wiki/Politics_and_the_English_Language",
+  "text": "(Orwell's parody: Ecclesiastes 9:11 rewritten as abstract 'modern English' about success, failure, and unpredictable factors.)",
+  "verbatim": false,
+  "why": "The King James original (public domain) is concrete and visual; the parody replaces every image with abstraction.",
+  "year": "1946"
+ },
+ {
+  "id": "X14",
+  "identified_by": "SEC, A Plain English Handbook",
+  "kind": "pair",
+  "rewrite": "We applied ...",
+  "rule_ids": [
+   "ACT-02"
+  ],
+  "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+  "text": "We made an application ...",
+  "verbatim": true,
+  "why": "Nominalization with a weak verb.",
+  "year": "1998"
+ },
+ {
+  "id": "X15",
+  "identified_by": "SEC, A Plain English Handbook",
+  "kind": "pair",
+  "rewrite": "We will not own the company's stock.",
+  "rule_ids": [
+   "ACT-02"
+  ],
+  "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+  "text": "We will have no stock ownership of the company.",
+  "verbatim": true,
+  "why": "Hidden verb ('ownership').",
+  "year": "1998"
+ },
+ {
+  "id": "X16",
+  "identified_by": "SEC, A Plain English Handbook",
+  "kind": "pair",
+  "rewrite": "This summary highlights some information from this Prospectus.",
+  "rule_ids": [
+   "FILL-07"
+  ],
+  "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+  "text": "The following summary is intended only to highlight certain information contained elsewhere in this Prospectus.",
+  "verbatim": true,
+  "why": "Superfluous words.",
+  "year": "1998"
+ },
+ {
+  "id": "X17",
+  "identified_by": "SEC, A Plain English Handbook",
+  "kind": "pair",
+  "rewrite": "Only the primary beneficiary may receive these dividends.",
+  "rule_ids": [
+   "CLR-05"
+  ],
+  "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+  "text": "Persons other than the primary beneficiary may not receive these dividends.",
+  "verbatim": true,
+  "why": "Negative turned positive.",
+  "year": "1998"
+ },
+ {
+  "id": "X18",
+  "identified_by": "Federal Plain Language Guidelines",
+  "kind": "pair",
+  "rewrite": "You must include the following information in your application.",
+  "rule_ids": [
+   "ACT-03",
+   "CLR-01"
+  ],
+  "source_url": "https://digital.gov/guides/plain-language/writing",
+  "text": "The following information must be included in the application for it to be considered complete.",
+  "verbatim": true,
+  "why": "Passive to active; addresses the reader as 'you'.",
+  "year": "2011"
+ },
+ {
+  "id": "X19",
+  "identified_by": "Federal Plain Language Guidelines",
+  "kind": "pair",
+  "rewrite": "We analyze data.",
+  "rule_ids": [
+   "ACT-02"
+  ],
+  "source_url": "https://digital.gov/guides/plain-language/writing",
+  "text": "We conduct an analysis of the data.",
+  "verbatim": true,
+  "why": "Hidden verb.",
+  "year": "2011"
+ },
+ {
+  "id": "X20",
+  "identified_by": "Federal Plain Language Guidelines",
+  "kind": "pair",
+  "rewrite": "These sections tell you how to meet the requirements of Circular A-110 for this grant program.",
+  "rule_ids": [
+   "CLR-10",
+   "CLR-01"
+  ],
+  "source_url": "https://digital.gov/guides/plain-language/writing",
+  "text": "These sections describe types of information that would satisfy the application requirements of Circular A-110 as it would apply to this grant program.",
+  "verbatim": true,
+  "why": "Conditional tense and abstraction replaced with present tense and 'you'.",
+  "year": "2011"
+ },
+ {
+  "id": "X21",
+  "identified_by": "GOV.UK clear-language guidance",
+  "kind": "pair",
+  "rewrite": "You need an electronic travel authorisation.",
+  "rule_ids": [
+   "ACT-03"
+  ],
+  "source_url": "https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/writing-guidelines/clear-language/",
+  "text": "An electronic travel authorisation is needed.",
+  "verbatim": true,
+  "why": "Active voice addressed to the reader.",
+  "year": "2024"
+ },
+ {
+  "id": "X22",
+  "identified_by": "Google developer documentation style guide",
+  "kind": "pair",
+  "rewrite": "If the cache is full, clear it.",
+  "rule_ids": [
+   "CLR-03"
+  ],
+  "source_url": "https://developers.google.com/style/translation",
+  "text": "Clear it if the cache is full.",
+  "verbatim": true,
+  "why": "Condition before instruction.",
+  "year": ""
+ },
+ {
+  "id": "X23",
+  "identified_by": "Google developer documentation style guide",
+  "kind": "pair",
+  "rewrite": "You must configure the rules before you deploy.",
+  "rule_ids": [
+   "CLR-04",
+   "ACT-03"
+  ],
+  "source_url": "https://developers.google.com/style/translation",
+  "text": "Configuring the rules is required before deploying.",
+  "verbatim": true,
+  "why": "-ing forms and passive replaced with 'you must'.",
+  "year": ""
+ },
+ {
+  "id": "X24",
+  "identified_by": "Google developer documentation style guide",
+  "kind": "pair",
+  "rewrite": "Request only one token.",
+  "rule_ids": [
+   "CLR-02"
+  ],
+  "source_url": "https://developers.google.com/style/translation",
+  "text": "Only request one token.",
+  "verbatim": true,
+  "why": "Modifier placed next to what it modifies.",
+  "year": ""
+ },
+ {
+  "id": "X25",
+  "identified_by": "Center for Plain Language, Grand ClearMark (Health Literacy Media & Novartis)",
+  "kind": "good",
+  "rewrite": "",
+  "rule_ids": [
+   "CLR-07",
+   "ORD-02",
+   "CLR-01"
+  ],
+  "source_url": "https://centerforplainlanguage.org/awards/clearmark/2026-clearmark-awards-winners/",
+  "text": "(Clinical-trial results summary for teens and young adults with diabetes.)",
+  "verbatim": false,
+  "why": "Judges praised short sentences, common words, a tone right for young readers without condescension, and regular testing with the audience.",
+  "year": "2026"
+ },
+ {
+  "id": "X26",
+  "identified_by": "Center for Plain Language, ClearMark (Multiple Myeloma Research Foundation)",
+  "kind": "good",
+  "rewrite": "",
+  "rule_ids": [
+   "ORD-01",
+   "CLR-07",
+   "ACT-03"
+  ],
+  "source_url": "https://centerforplainlanguage.org/awards/clearmark/2026-clearmark-awards-winners/",
+  "text": "(Patient guide: dietary supplements and myeloma.)",
+  "verbatim": false,
+  "why": "A one-sentence 'quick takeaway' at the top, familiar words, short active sentences, basics-to-details order, clear headings.",
+  "year": "2026"
+ },
+ {
+  "id": "X27",
+  "identified_by": "Center for Plain Language, ClearMark (Maximus)",
+  "kind": "good",
+  "rewrite": "",
+  "rule_ids": [
+   "ORD-01",
+   "CLR-11"
+  ],
+  "source_url": "https://centerforplainlanguage.org/awards/clearmark/2026-clearmark-awards-winners/",
+  "text": "(Health-insurance tax form letter and FAQ, Massachusetts Health Connector.)",
+  "verbatim": false,
+  "why": "Opening statement of purpose and required action; logically ordered headings; a checklist that anticipates questions.",
+  "year": "2026"
+ },
+ {
+  "id": "X28",
+  "identified_by": "Center for Plain Language, ClearMark legal category",
+  "kind": "good",
+  "rewrite": "",
+  "rule_ids": [
+   "CLR-07",
+   "ACT-03",
+   "CLR-11"
+  ],
+  "source_url": "https://centerforplainlanguage.org/center-for-plain-language-honors-march-of-dimes-with-the-grand-clearmark-award-charles-schwab-captures-the-grand-wondermark-award/",
+  "text": "(Proposed rule, U.S. Fish and Wildlife Service.)",
+  "verbatim": false,
+  "why": "A regulation that avoids jargon, uses familiar nouns and active verbs, tables, vertical lists, and question-and-answer headings.",
+  "year": "2013"
+ },
+ {
+  "id": "X29",
+  "identified_by": "Joseph Kimble, survey of Michigan lawyers",
+  "kind": "good",
+  "rewrite": "",
+  "rule_ids": [
+   "ORD-01",
+   "ORD-02"
+  ],
+  "source_url": "https://www.michbar.org/file/barjournal/article/documents/pdf4article2972.pdf",
+  "text": "(Plain-language rewrite of a Michigan judicial opinion.)",
+  "verbatim": false,
+  "why": "61% of 251 lawyers preferred it. Top reasons: less unnecessary detail and an opening summary. Average sentence length fell from 25 to 19 words.",
+  "year": "2006"
+ },
+ {
+  "id": "X30",
+  "identified_by": "Warren Buffett, preface to the SEC Plain English Handbook",
+  "kind": "good",
+  "rewrite": "",
+  "rule_ids": [
+   "CLR-01"
+  ],
+  "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+  "text": "Write with a specific person in mind.",
+  "verbatim": true,
+  "why": "Buffett pictured his sisters: smart, but not experts in finance.",
+  "year": "1998"
+ },
+ {
+  "id": "X31",
+  "identified_by": "A Sun customer, quoted in Morkes & Nielsen's web-writing research (NN/g)",
+  "kind": "bad",
+  "rewrite": "Yes, Sun still supports that Solaris version. (Our illustration: answer the question with the fact.)",
+  "rule_ids": [
+   "WORD-10",
+   "ORD-01",
+   "TPL-06"
+  ],
+  "source_url": "https://www.nngroup.com/articles/concise-scannable-and-objective-how-to-write-for-the-web/",
+  "text": "Sun is exceptionally committed to...",
+  "verbatim": true,
+  "why": "The customer asked whether Sun would support an older Solaris platform and got self-promotion instead of an answer. They said they wanted fact, not platitudes.",
+  "year": "1997"
+ },
+ {
+  "id": "X32",
+  "identified_by": "Plain English Campaign, before-and-after examples",
+  "kind": "pair",
+  "rewrite": "If you have any questions, please phone.",
+  "rule_ids": [
+   "CLR-07",
+   "FILL-07"
+  ],
+  "source_url": "https://www.plainenglish.co.uk/campaigning/examples/before-and-after",
+  "text": "If there are any points on which you require explanation or further particulars we shall be glad to furnish such additional details as may be required by telephone.",
+  "verbatim": true,
+  "why": "Twenty-eight words of formal padding reduce to six.",
+  "year": ""
+ },
+ {
+  "id": "X33",
+  "identified_by": "Plain English Campaign, before-and-after examples",
+  "kind": "pair",
+  "rewrite": "Children need good schools if they are to learn properly.",
+  "rule_ids": [
+   "ACT-02",
+   "CLR-06",
+   "ACT-01"
+  ],
+  "source_url": "https://www.plainenglish.co.uk/campaigning/examples/before-and-after",
+  "text": "High-quality learning environments are a necessary precondition for facilitation and enhancement of the ongoing learning process.",
+  "verbatim": true,
+  "why": "Abstract nouns replaced by the real actors (children) and a concrete noun (schools).",
+  "year": ""
+ },
+ {
+  "id": "X34",
+  "identified_by": "Plain English Campaign, before-and-after examples",
+  "kind": "pair",
+  "rewrite": "(The Campaign's version thanks the writer, then says the library needs to see the posters first to check they won't offend anyone.)",
+  "rule_ids": [
+   "ORD-01",
+   "CLR-07"
+  ],
+  "source_url": "https://www.plainenglish.co.uk/campaigning/examples/before-and-after",
+  "text": "(A council's library letter about displaying benefit-rights posters, full of 'provenance and authoritativeness' and 'items of a disputatious or polemic kind'.)",
+  "verbatim": false,
+  "why": "The rewrite answers the actual request and states the next step.",
+  "year": ""
+ },
+ {
+  "id": "X35",
+  "identified_by": "Plain English Campaign, before-and-after examples",
+  "kind": "pair",
+  "rewrite": "(The Campaign's version: 'You must now pay a penalty charge of £70 within 28 days', with the exact date, and 'Do not pay the traffic warden'.)",
+  "rule_ids": [
+   "CLR-01",
+   "CLR-08",
+   "FMT-02"
+  ],
+  "source_url": "https://www.plainenglish.co.uk/campaigning/examples/before-and-after",
+  "text": "(A UK parking ticket: 'must be paid not later than the last day of the period of 28 days beginning with the date on which this PCN was served'.)",
+  "verbatim": false,
+  "why": "Addresses the reader as 'you', gives the actual deadline, spells out the abbreviation, and drops the all-caps shouting.",
+  "year": "2010"
+ },
+ {
+  "id": "X36",
+  "identified_by": "Plain English Campaign, Golden Bull (Halton Borough Council)",
+  "kind": "bad",
+  "rewrite": "",
+  "rule_ids": [
+   "ORD-02",
+   "CLR-11"
+  ],
+  "source_url": "https://www.plainenglish.co.uk/campaigning/examples/long-sentences",
+  "text": "(A 630-word single sentence in a footpath-diversion notice.)",
+  "verbatim": false,
+  "why": "One sentence tried to describe an entire route by distances from building corners. A map or numbered steps would do it.",
+  "year": "2005"
+ },
+ {
+  "id": "X37",
+  "identified_by": "Federal Plain Language Guidelines, 'Write short sentences'",
+  "kind": "pair",
+  "rewrite": "We prepare a preliminary proposal to present to an employer who agrees to negotiate a job that meets both his and your employment needs.",
+  "rule_ids": [
+   "ORD-02",
+   "CLR-01",
+   "ACT-03"
+  ],
+  "source_url": "https://web.archive.org/web/2023/https://www.plainlanguage.gov/guidelines/concise/write-short-sentences/",
+  "text": "The proposal is presented to an employer who agrees to negotiate an individualized job that meets the employment needs of the applicant and real business needs of the employer.",
+  "verbatim": true,
+  "why": "Passive and third person replaced with 'we' and 'you'; the full rewrite also splits the original into shorter sentences.",
+  "year": "2011"
+ },
+ {
+  "id": "X38",
+  "identified_by": "CDC, Simply Put",
+  "kind": "pair",
+  "rewrite": "Smoking causes heart disease and lung cancer.",
+  "rule_ids": [
+   "ACT-03"
+  ],
+  "source_url": "https://cdc.gov/health-literacy/pdf/Simply_Put.pdf",
+  "text": "Heart disease and lung cancer are caused by smoking.",
+  "verbatim": true,
+  "why": "Passive to active.",
+  "year": "2010"
+ },
+ {
+  "id": "X39",
+  "identified_by": "CDC, Simply Put",
+  "kind": "pair",
+  "rewrite": "Cook meat until it is not pink in the middle.",
+  "rule_ids": [
+   "CLR-16",
+   "CLR-06"
+  ],
+  "source_url": "https://cdc.gov/health-literacy/pdf/Simply_Put.pdf",
+  "text": "Following safety precautions can reduce food-borne disease transmission.",
+  "verbatim": true,
+  "why": "Vague, passive abstraction replaced by a concrete action.",
+  "year": "2010"
+ },
+ {
+  "id": "X40",
+  "identified_by": "CDC, Simply Put; HHS Health Literacy Online 2.4",
+  "kind": "pair",
+  "rewrite": "Wear your helmet every time you ride your bicycle.",
+  "rule_ids": [
+   "CLR-05"
+  ],
+  "source_url": "https://cdc.gov/health-literacy/pdf/Simply_Put.pdf",
+  "text": "Do not ride your bicycle without wearing a helmet.",
+  "verbatim": true,
+  "why": "Negative instruction turned positive.",
+  "year": "2010"
+ },
+ {
+  "id": "X41",
+  "identified_by": "CDC, Simply Put",
+  "kind": "pair",
+  "rewrite": "Wear your seatbelt. It could save your life.",
+  "rule_ids": [
+   "FMT-04"
+  ],
+  "source_url": "https://cdc.gov/health-literacy/pdf/Simply_Put.pdf",
+  "text": "Seat Belts",
+  "verbatim": true,
+  "why": "One-word label replaced by a complete-idea heading.",
+  "year": "2010"
+ },
+ {
+  "id": "X42",
+  "identified_by": "CDC, Simply Put",
+  "kind": "pair",
+  "rewrite": "Feel for lumps about the size of a pea.",
+  "rule_ids": [
+   "CLR-17",
+   "CLR-06"
+  ],
+  "source_url": "https://cdc.gov/health-literacy/pdf/Simply_Put.pdf",
+  "text": "Feel for lumps about 5 to 6 millimeters in diameter.",
+  "verbatim": true,
+  "why": "A familiar comparison instead of a measurement.",
+  "year": "2010"
+ },
+ {
+  "id": "X43",
+  "identified_by": "HHS, Health Literacy Online 2.6",
+  "kind": "pair",
+  "rewrite": "You may need a test to find out what's wrong.",
+  "rule_ids": [
+   "ACT-03",
+   "CLR-01"
+  ],
+  "source_url": "https://odphp.health.gov/healthliteracyonline/2016/write/section-2-6/",
+  "text": "Tests may be needed to find out what's wrong.",
+  "verbatim": true,
+  "why": "Passive to active, addressed to the reader.",
+  "year": "2016"
+ },
+ {
+  "id": "X44",
+  "identified_by": "HHS, Health Literacy Online 2.6",
+  "kind": "pair",
+  "rewrite": "... A neurologist is a doctor who treats problems related to the brain and nervous system.",
+  "rule_ids": [
+   "CLR-08"
+  ],
+  "source_url": "https://odphp.health.gov/healthliteracyonline/2016/write/section-2-6/",
+  "text": "Your primary doctor may refer you to a neurologist.",
+  "verbatim": true,
+  "why": "Defines the term in context, the first time.",
+  "year": "2016"
+ },
+ {
+  "id": "X45",
+  "identified_by": "HHS, Health Literacy Online 2.3",
+  "kind": "pair",
+  "rewrite": "Check your blood pressure every 2 years, especially if you are age 40 or older.",
+  "rule_ids": [
+   "ORD-01",
+   "CLR-15",
+   "CLR-16"
+  ],
+  "source_url": "https://odphp.health.gov/healthliteracyonline/2016/write/section-2-3/",
+  "text": "(A definition of blood pressure, then 'get it checked often.')",
+  "verbatim": false,
+  "why": "States the behavior first, specifically.",
+  "year": "2016"
+ },
+ {
+  "id": "X46",
+  "identified_by": "Microsoft Writing Style Guide, top 10 tips",
+  "kind": "pair",
+  "rewrite": "Store files online, access them from all your devices, and share them with coworkers.",
+  "rule_ids": [
+   "FILL-07"
+  ],
+  "source_url": "https://learn.microsoft.com/en-us/style-guide/top-10-tips-style-voice",
+  "text": "You can access Office apps across your devices, and you get online file storage and sharing.",
+  "verbatim": true,
+  "why": "Starts with verbs; drops 'you can'.",
+  "year": ""
+ },
+ {
+  "id": "X47",
+  "identified_by": "Microsoft Writing Style Guide",
+  "kind": "pair",
+  "rewrite": "Because you created the table, you can change it.",
+  "rule_ids": [
+   "CLR-21"
+  ],
+  "source_url": "https://learn.microsoft.com/ko-kr/style-guide/word-choice/use-simple-words-concise-sentences",
+  "text": "Since you created the table, you can change it.",
+  "verbatim": true,
+  "why": "'Since' can mean time or cause.",
+  "year": ""
+ },
+ {
+  "id": "X48",
+  "identified_by": "Mailchimp Content Style Guide",
+  "kind": "pair",
+  "rewrite": "Stand in line to get a donut.",
+  "rule_ids": [
+   "CLR-05"
+  ],
+  "source_url": "https://styleguide.mailchimp.com/grammar-and-mechanics/",
+  "text": "You can't get a donut if you don't stand in line.",
+  "verbatim": true,
+  "why": "Two negatives replaced by one positive instruction.",
+  "year": ""
+ },
+ {
+  "id": "X49",
+  "identified_by": "Mailchimp Content Style Guide",
+  "kind": "pair",
+  "rewrite": "Select from these options: (numbered list)",
+  "rule_ids": [
+   "CLR-20"
+  ],
+  "source_url": "https://styleguide.mailchimp.com/writing-for-accessibility/",
+  "text": "Select from the options in the right sidebar.",
+  "verbatim": true,
+  "why": "Directional language fails when the layout changes.",
+  "year": ""
+ },
+ {
+  "id": "X50",
+  "identified_by": "William Zinsser, On Writing Well (a university president's phrase)",
+  "kind": "bad",
+  "rewrite": "(campus protests)",
+  "rule_ids": [
+   "WORD-01",
+   "ACT-02",
+   "CLR-06"
+  ],
+  "source_url": "https://www.litcharts.com/lit/on-writing-well/chapter-2-simplicity",
+  "text": "very considerable potentially explosive expressions of dissatisfaction",
+  "verbatim": true,
+  "why": "Zinsser's example of clutter: a stack of modifiers around an abstract noun for a concrete event.",
+  "year": ""
+ },
+ {
+  "id": "X51",
+  "identified_by": "William Zinsser, On Writing Well, ch. 16",
+  "kind": "bad",
+  "rewrite": "(Ask parents to call the teacher.)",
+  "rule_ids": [
+   "CLR-07",
+   "WORD-02"
+  ],
+  "source_url": "https://www.litcharts.com/lit/on-writing-well/chapter-16-business-writing-writing-in-your-job",
+  "text": "(A school principal's notice about a 'special phone communication system'.)",
+  "verbatim": false,
+  "why": "Zinsser taught 40 principals four rules: clarity, simplicity, brevity, humanity.",
+  "year": ""
+ },
+ {
+  "id": "X52",
+  "identified_by": "Bryan Garner, LawProse Lesson 287",
+  "kind": "pair",
+  "rewrite": "(A 20-word rewrite: 'the tax code', 'many methods', 'IRS errors', 'imposing personal liability on IRS employees isn't among them'.)",
+  "rule_ids": [
+   "FILL-07",
+   "CLR-07"
+  ],
+  "source_url": "https://lawprose.org/lawprose-lesson-287-plague-wordiness/",
+  "text": "(A 34-word sentence beginning 'The Internal Revenue Code contains numerous methods...')",
+  "verbatim": false,
+  "why": "Garner estimates a line edit can cut a typical brief or contract by about 25% without changing its meaning.",
+  "year": ""
+ }
+]

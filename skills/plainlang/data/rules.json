@@ -1,0 +1,3877 @@
+{
+ "meta": {
+  "name": "PlainLang",
+  "version": "0.1.0",
+  "regex_dialect": "Python re. Patterns were authored for JavaScript and converted; the review page may need \\Z replaced with $ (no multiline).",
+  "default_flags": "MULTILINE|IGNORECASE (case_sensitive rules drop IGNORECASE)",
+  "categories": [
+   {
+    "id": "clarity",
+    "name": "Clarity principles",
+    "prefix": "CLR"
+   },
+   {
+    "id": "actors",
+    "name": "Actors and actions",
+    "prefix": "ACT"
+   },
+   {
+    "id": "words",
+    "name": "Word choice",
+    "prefix": "WORD"
+   },
+   {
+    "id": "templates",
+    "name": "Rhetorical templates",
+    "prefix": "TPL"
+   },
+   {
+    "id": "filler",
+    "name": "Filler and chat habits",
+    "prefix": "FILL"
+   },
+   {
+    "id": "order",
+    "name": "Order, emphasis, and claims",
+    "prefix": "ORD"
+   },
+   {
+    "id": "format",
+    "name": "Formatting and output",
+    "prefix": "FMT"
+   },
+   {
+    "id": "fiction",
+    "name": "Fiction",
+    "prefix": "FIC"
+   }
+  ],
+  "scope_semantics": {
+   "sentence": "a match anywhere counts (min_matches applies per text)",
+   "paragraph": "count matches per paragraph (blank-line separated)",
+   "text": "count matches across the whole text"
+  },
+  "out_of_scope": [
+   "inclusive and bias-free language"
+  ],
+  "scan_semantics": {
+   "prose": "code blocks, inline code, URLs, and blockquotes are masked before matching",
+   "raw": "matched against the unmasked text"
+  }
+ },
+ "rules": [
+  {
+   "id": "CLR-01",
+   "category": "clarity",
+   "name": "Write to one specific reader",
+   "severity": "warn",
+   "dont": "Text aimed at nobody in particular: \"users\", \"stakeholders\", \"the reader\", \"one\", and explanations pitched at the writer's own level of knowledge.",
+   "do": "Picture one real person who will read it, what they already know, and what they need to do next. Write to them as \"you\".",
+   "rationale": "Pinker calls the curse of knowledge the chief cause of opaque writing: writers can't remember what it was like not to know. Buffett's fix, in the SEC handbook's preface, is to write for one smart non-expert he knows.",
+   "detect": [
+    "Third-person references to the reader ('the user', 'users', 'one') in text the reader will act on",
+    "Undefined steps the writer skipped because they're obvious to the writer"
+   ],
+   "patterns": [
+    "\\b(?:the\\s+users?|the\\s+reader|stakeholders|one)\\s+(?:should|must|may|will\\s+need\\s+to|needs\\s+to|is\\s+able\\s+to)\\b(?!\\s+step)",
+    "(?:^|[.!?]\\s+)Users\\s+(?:should|must|may|need\\s+to)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Specs and reports about users (not to them) can use 'users'.",
+   "examples": [
+    {
+     "bad": "Users should ensure that the configuration file is updated prior to deployment.",
+     "better": "Before you deploy, update config.toml.",
+     "note": ""
+    },
+    {
+     "bad": "One may wish to consult the documentation for further details.",
+     "better": "The setup steps are in README.md.",
+     "note": ""
+    },
+    {
+     "bad": "Stakeholders will need to review the proposal.",
+     "better": "Maria and the finance team need to approve this by Friday.",
+     "note": ""
+    }
+   ],
+   "source": "SEC Plain English Handbook (1998) (Buffett preface); Pinker, The Sense of Style (2014); Federal Plain Language Guidelines (plainlanguage.gov / digital.gov); Google developer documentation style guide; 18F content guide",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-02",
+   "category": "clarity",
+   "name": "Start with the familiar, end with the new",
+   "severity": "warn",
+   "dont": "Sentences that open with new, unexplained information and end on old or minor detail, and subjects separated from their verbs by long interruptions.",
+   "do": "Open each sentence with something the reader already knows (often from the previous sentence). Put the subject's verb right after it. Save the new or important part for the end, where readers put emphasis.",
+   "rationale": "Gopen and Swan showed readers expect context at the start of a sentence (topic position) and emphasis at the end (stress position). Williams calls this old-to-new cohesion.",
+   "detect": [
+    "A long phrase (8+ words) between the subject and its verb",
+    "A sentence whose first words are new to the reader while its last words repeat known material",
+    "Paragraphs where each sentence starts on a different topic"
+   ],
+   "patterns": [
+    "^(?:The|This|Our|Each|Every|A|An)\\s+(?:[\\w-]+\\s+){0,3}[\\w-]+,\\s+(?:[\\w'-]+\\s+){6,}[\\w'-]+,\\s+(?:is|are|was|were|has|have|\\w+ed|\\w+s)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Gopen and Swan call these reader expectations, not rules. Break them on purpose for effect.",
+   "examples": [
+    {
+     "bad": "The enzyme, purified from bacterial cultures grown for three days under a modified protocol, increased the reaction rate.",
+     "better": "We grew bacterial cultures for three days under an adjusted protocol and purified the enzyme. Adding it increased the reaction rate.",
+     "note": "Adapted from Gopen and Swan's subject-verb principle."
+    },
+    {
+     "bad": "A new retry policy, which the platform team designed after last month's outage, is now the default.",
+     "better": "Last month's outage led the platform team to design a new retry policy. That policy is now the default.",
+     "note": ""
+    }
+   ],
+   "source": "Gopen & Swan, The Science of Scientific Writing (1990); Williams & Bizup, Style",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-03",
+   "category": "clarity",
+   "name": "Put conditions before instructions",
+   "severity": "warn",
+   "dont": "Instructions that tell the reader to act and only then say when: \"Clear the cache if it's full\", \"Run the migration, but only on staging\".",
+   "do": "Put the condition first: \"If the cache is full, clear it.\"",
+   "rationale": "A reader following steps acts as soon as they read the verb. If the condition comes last, they may already have done the wrong thing.",
+   "detect": [
+    "Imperative verb at sentence start with 'if', 'unless', 'when', or 'only' later in the sentence"
+   ],
+   "patterns": [
+    "(?:^|[.!?]\\s+)(?:Click|Run|Delete|Restart|Set|Use|Clear|Add|Remove|Open|Select|Enter|Install|Update|Reset|Disable|Enable|Restore)\\b[^.!?]{2,60}\\b(?:if|unless|only\\s+(?:if|when|on))\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "Clear the cache if it is full.",
+     "better": "If the cache is full, clear it.",
+     "note": "Human-identified: Google developer documentation style guide."
+    },
+    {
+     "bad": "Delete the old branch unless someone else is using it.",
+     "better": "If the old branch is unused, delete it.",
+     "note": ""
+    },
+    {
+     "bad": "Run the migration, but only on staging.",
+     "better": "On staging only, run the migration.",
+     "note": ""
+    }
+   ],
+   "source": "Google developer documentation style guide",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-04",
+   "category": "clarity",
+   "name": "Use \"must\" for requirements",
+   "severity": "warn",
+   "dont": "\"Shall\", \"is required to\", \"it is mandatory that\", and soft forms for real requirements (\"you may want to\", \"you may be able to\").",
+   "do": "Use \"must\" for requirements, \"need to\" for administrative steps, \"can\" for options, and \"must not\" for prohibitions.",
+   "rationale": "\"Shall\" is ambiguous even in law (it can mean must, may, or will). GOV.UK and the federal guidelines both standardize on must / need / can.",
+   "detect": [
+    "shall / shall not",
+    "'is required to', 'it is mandatory'",
+    "'you may be able to' for a plain option"
+   ],
+   "patterns": [
+    "\\bshall(?:\\s+not)?\\b",
+    "\\b(?:is|are)\\s+required\\s+to\\b|\\bit\\s+is\\s+mandatory\\s+(?:that|to)\\b",
+    "\\byou\\s+may\\s+be\\s+able\\s+to\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Keep \"shall\" when quoting a statute or contract verbatim.",
+   "examples": [
+    {
+     "bad": "The applicant shall submit Form 12 within 30 days.",
+     "better": "You must submit Form 12 within 30 days.",
+     "note": ""
+    },
+    {
+     "bad": "You may be able to claim a refund.",
+     "better": "You can claim a refund.",
+     "note": "GOV.UK guidance on 'can'."
+    },
+    {
+     "bad": "Contributors are required to sign the CLA.",
+     "better": "You must sign the CLA before we can merge your pull request.",
+     "note": ""
+    }
+   ],
+   "source": "Federal Plain Language Guidelines (plainlanguage.gov / digital.gov); GOV.UK style guide",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-05",
+   "category": "clarity",
+   "name": "Say it positively",
+   "severity": "warn",
+   "dont": "Negative and double-negative constructions the reader has to flip: \"not uncommon\", \"may not ... unless\", \"no X other than\", \"persons other than ... may not\".",
+   "do": "State what is true or what the reader can do.",
+   "rationale": "Each negation is a small logic step for the reader. Two in one sentence invite misreading.",
+   "detect": [
+    "not + un-/in-/non- word",
+    "A negative plus 'unless', 'except', or 'other than' in one clause",
+    "Two negatives in one sentence",
+    "HHS 2.4: use 'don't' sparingly and avoid 'should', which reads as preachy"
+   ],
+   "patterns": [
+    "\\bnot\\s+(?:un|in|im|non|dis)\\w{3,}\\b",
+    "\\b(?:not|no|never|cannot|can'?t|won'?t)\\b[^.!?]{0,50}\\b(?:unless|except|other\\s+than|without)\\b",
+    "\\b(?:other\\s+than|except\\s+for)\\b[^.!?]{0,60}\\b(?:may|can|will|should)\\s+not\\b",
+    "\\byou\\s+should(?:n'?t)?\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Warnings that must stand out (\"Do not unplug during the update\") are fine. usability.gov 15:10: a negative can be clearer when a wrong step is likely or its consequences are serious. 'You should' is fine for genuine recommendations in technical advice; the HHS caution is about preaching to the reader.",
+   "examples": [
+    {
+     "bad": "Persons other than the primary beneficiary may not receive these dividends.",
+     "better": "Only the primary beneficiary may receive these dividends.",
+     "note": "Human-identified: SEC Plain English Handbook."
+    },
+    {
+     "bad": "This error is not uncommon when the cache is cold.",
+     "better": "This error is common when the cache is cold.",
+     "note": ""
+    },
+    {
+     "bad": "You cannot deploy without approval unless it's a hotfix.",
+     "better": "You need approval to deploy, except for hotfixes.",
+     "note": ""
+    },
+    {
+     "bad": "You can't get a donut if you don't stand in line.",
+     "better": "Stand in line to get a donut.",
+     "note": "Human-identified: Mailchimp Content Style Guide."
+    },
+    {
+     "bad": "Do not ride your bicycle without wearing a helmet.",
+     "better": "Wear your helmet every time you ride your bicycle.",
+     "note": "Human-identified: CDC Simply Put; also HHS Health Literacy Online 2.4."
+    }
+   ],
+   "source": "SEC Plain English Handbook (1998); Williams & Bizup, Style; Federal Plain Language Guidelines (plainlanguage.gov / digital.gov); Google developer documentation style guide; HHS Health Literacy Online (2016); CDC Simply Put; Mailchimp Content Style Guide; Research-Based Web Design & Usability Guidelines (usability.gov), ch. 15",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-06",
+   "category": "clarity",
+   "name": "Climb down the ladder of abstraction",
+   "severity": "warn",
+   "dont": "Abstract category words where a concrete one exists: aspects, factors, elements, issues, considerations, matters, facets, dimensions, things; and \"asset\" when you mean \"one share of IBM stock\".",
+   "do": "Name the most specific thing that is still true: the file, the number, the person, the error message.",
+   "rationale": "Concrete words create a picture the reader can check. Abstract ones make the reader guess which instance you mean. The SEC handbook illustrates this with a ladder from \"asset\" down to \"one share of IBM common stock\".",
+   "detect": [
+    "'[aspect/factor/element/issue/consideration] of' with no concrete noun nearby",
+    "A sentence a reader couldn't picture or test"
+   ],
+   "patterns": [
+    "\\b(?:various|several|certain|key|important|relevant|other)\\s+(?:aspects|factors|elements|considerations|matters|facets|dimensions|issues|things)\\b",
+    "\\b(?:aspects?|facets?|dimensions?)\\s+of\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Abstract words are fine in a summary that the next sentences make concrete.",
+   "examples": [
+    {
+     "bad": "There are various factors to consider regarding the performance aspects of this approach.",
+     "better": "This approach adds a database query to every page load, about 30 ms.",
+     "note": ""
+    },
+    {
+     "bad": "Investors should consider their assets.",
+     "better": "Check how many shares of IBM common stock you own.",
+     "note": "Built from the SEC handbook's ladder of abstraction."
+    },
+    {
+     "bad": "We addressed several key issues.",
+     "better": "We fixed the login timeout and the duplicate email bug.",
+     "note": ""
+    }
+   ],
+   "source": "SEC Plain English Handbook (1998); Orwell, Politics and the English Language (1946); Pinker, The Sense of Style (2014); Strunk & White",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-07",
+   "category": "clarity",
+   "name": "Use the short, familiar word",
+   "severity": "warn",
+   "dont": "Formal words where an everyday one means the same: purchase, assist, approximately, commence, initiate, modify, execute (a program), terminate, sufficient, additional, numerous, prior to, subsequent to, in excess of, with regard to, in accordance with, endeavor, ascertain, demonstrate, obtain, require, regarding, per annum, e.g., i.e. The federal guidelines' 'dirty dozen' are: addressees, assist/assistance, commence, implement, in accordance with, in order that, in the amount of, in the event of, it is, promulgate, this activity/command, utilize/utilization.",
+   "do": "Use the plain word: buy, help, about, start, change, run, end, enough, more, many, before, after, more than, about, under, try, find out, show, get, need, about, a year, for example, that is.",
+   "rationale": "Orwell's second rule, GOV.UK, 18F, and Google all say this. In Oppenheimer's experiments, readers rated writers who used needlessly long words as less intelligent.",
+   "detect": [
+    "Any listed word where the plain one carries the same meaning"
+   ],
+   "patterns": [
+    "\\b(?:purchas(?:e|es|ed|ing)|assist(?:s|ed|ing|ance)?|approximately|commenc(?:e|es|ed|ing|ement)|initiat(?:e|es|ed|ing)|modif(?:y|ies|ied|ying)|terminat(?:e|es|ed|ing)|sufficient|numerous|prior\\s+to|subsequent(?:\\s+to|ly)|in\\s+excess\\s+of|with\\s+(?:regard|respect)\\s+to|in\\s+accordance\\s+with|endeavou?r(?:s|ed|ing)?|ascertain(?:s|ed|ing)?|obtain(?:s|ed|ing)?|regarding|per\\s+annum)\\b",
+    "\\b(?:e\\.g\\.|i\\.e\\.)",
+    "\\b(?:addressees|in\\s+the\\s+amount\\s+of|in\\s+the\\s+event\\s+of|promulgat(?:e|es|ed|ing)|in\\s+order\\s+that|pursuant\\s+to|in\\s+lieu\\s+of|inasmuch\\s+as|incumbent\\s+upon|the\\s+undersigned|until\\s+such\\s+time\\s+as|afford\\s+an\\s+opportunity|in\\s+a\\s+timely\\s+manner)\\b",
+    "\\b(?:furnish(?:es|ed|ing)?|further\\s+particulars|additional|precondition|facilitation)\\b",
+    "\\b(?:adhere(?:s|d)?\\s+to|adherence|individuals|persons|optimal|pertinent|permissible|prolonged|disproportionate|frequently|make\\s+use\\s+of)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Use the formal word when it's the precise term in your field (\"terminate a process\", \"execute a contract\"). 'Implement' is the precise word for code (implement an interface); the federal list targets the bureaucratic sense.",
+   "substitutions": {
+    "/ (slash)": "and, or",
+    "a number of": "some",
+    "access (verb)": "get",
+    "accompany": "go with",
+    "accomplish": "carry out, do",
+    "accordingly": "so",
+    "acquire": "get",
+    "activate": "start, turn on",
+    "additional": "added, more, other",
+    "addressees": "you",
+    "adhere to": "follow, stick to",
+    "adjacent to": "next to",
+    "advantageous": "helpful",
+    "adverse event": "side effect",
+    "afford an opportunity": "allow, let",
+    "anticipate": "expect",
+    "approximate": "about",
+    "as a means to": "to",
+    "ascertain": "find out, learn",
+    "assist, assistance": "aid, help",
+    "associated with": "linked to",
+    "at the present time": "at present, now",
+    "attempt": "try",
+    "available": "in stock (when that's the meaning)",
+    "by means of": "by, with",
+    "capability": "ability",
+    "close proximity": "near",
+    "commence": "begin, start",
+    "demonstrate": "prove, show",
+    "designate": "appoint, choose, name",
+    "detect": "find",
+    "disproportionate": "uneven",
+    "disseminate": "give, issue, send",
+    "due to the fact that": "due to, since",
+    "employ": "use",
+    "endeavor": "try",
+    "ensure": "make sure",
+    "establish connectivity": "connect",
+    "establishment": "setting up",
+    "evaluate": "test, study",
+    "evidence-based": "shown to work",
+    "expedite": "speed up",
+    "exposure": "contact with something harmful",
+    "extract": "remove",
+    "facilitate": "ease, help",
+    "failed to": "didn't",
+    "feasible": "doable",
+    "finalize": "complete, finish",
+    "frequently": "often",
+    "guidelines": "recommendations",
+    "hazardous": "dangerous",
+    "impact (noun)": "effect",
+    "implement": "carry out, start",
+    "in a timely manner": "on time, promptly",
+    "in accordance with": "by, following, per, under",
+    "in addition": "also, besides, too",
+    "in an effort to": "to",
+    "in lieu of": "instead",
+    "in order that": "for, so",
+    "in order to": "to",
+    "in regard to": "about",
+    "in the amount of": "for",
+    "in the event of": "if",
+    "in the near future": "soon",
+    "in the process of": "(omit)",
+    "in view of": "since",
+    "inasmuch as": "since",
+    "inception": "start",
+    "incumbent upon": "must",
+    "individuals": "people",
+    "inform": "tell",
+    "initiate": "start",
+    "initiative": "program, project",
+    "integrate": "combine",
+    "intervention": "action, treatment, program",
+    "is applicable to": "applies to",
+    "is authorized to": "may",
+    "it is": "(omit)",
+    "it is essential": "must, need to",
+    "it is requested": "please",
+    "limited number": "few",
+    "maintain": "keep up",
+    "make use of": "use",
+    "medication": "medicine",
+    "modify": "change",
+    "monitor": "check, watch",
+    "numerous": "many",
+    "on a regular basis": "(omit)",
+    "optimal": "best",
+    "optimum": "best",
+    "outcome": "result",
+    "parameters": "limits",
+    "participate": "take part",
+    "perform": "do",
+    "permissible": "allowed",
+    "permit": "let",
+    "persons": "people",
+    "pertaining to": "about, of, on",
+    "pertinent": "relevant",
+    "portion": "part",
+    "possess": "have, own",
+    "prevalent": "common",
+    "previous": "earlier",
+    "prior to": "before",
+    "prolonged": "(state the time)",
+    "promulgate": "issue, publish",
+    "provide": "give, offer, say",
+    "provided that": "if",
+    "purchase": "buy",
+    "pursuant to": "by, under",
+    "reduce": "lower",
+    "regarding": "about",
+    "relocate": "move",
+    "remainder": "rest",
+    "remuneration": "pay",
+    "render": "give, make",
+    "request": "ask",
+    "require": "must, need",
+    "required": "called for, needed",
+    "reside": "live",
+    "seek": "look for, ask for",
+    "severe": "serious",
+    "sufficient": "enough",
+    "sustain": "keep going",
+    "terminate": "end, stop",
+    "the undersigned": "I",
+    "therefore": "so",
+    "toxic": "poisonous",
+    "transmit": "spread",
+    "under the provisions of": "under",
+    "until such time as": "until",
+    "utilize, utilization": "use",
+    "validate": "confirm",
+    "viable": "workable",
+    "with reference to": "about",
+    "with the exception of": "except for"
+   },
+   "examples": [
+    {
+     "bad": "Please assist the customer in obtaining approximately 3 additional licenses prior to the commencement of the trial.",
+     "better": "Help the customer get about 3 more licenses before the trial starts.",
+     "note": ""
+    },
+    {
+     "bad": "Purchase approximately 10 units.",
+     "better": "Buy about 10 units.",
+     "note": "Human-identified: GOV.UK clear-language examples (purchase, approximately)."
+    },
+    {
+     "bad": "Subsequent to modification of the settings, terminate and reinitiate the service.",
+     "better": "After you change the settings, restart the service.",
+     "note": ""
+    },
+    {
+     "bad": "If there are any points on which you require explanation or further particulars we shall be glad to furnish such additional details as may be required by telephone.",
+     "better": "If you have any questions, please phone.",
+     "note": "Human-identified: Plain English Campaign before-and-after examples."
+    },
+    {
+     "bad": "High-quality learning environments are a necessary precondition for facilitation and enhancement of the ongoing learning process.",
+     "better": "Children need good schools if they are to learn properly.",
+     "note": "Human-identified: Plain English Campaign before-and-after examples."
+    }
+   ],
+   "source": "Orwell, Politics and the English Language (1946); GOV.UK style guide; 18F content guide; Google developer documentation style guide; Oppenheimer, Applied Cognitive Psychology (2006); Federal Plain Language Guidelines (2011), via plainlanguage.gov archive; CDC Everyday Words for Public Health Communication; Microsoft Writing Style Guide; CDC Clear Communication Index; CDC Simply Put; Flesch, How to Write Plain English",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-08",
+   "category": "clarity",
+   "name": "Define terms and abbreviations the first time",
+   "severity": "warn",
+   "dont": "Unexplained acronyms, internal codenames, and specialist terms used as if the reader knows them.",
+   "do": "Spell out an abbreviation at first use, with the short form in parentheses. Explain a specialist term in plain words the first time, or use the plain words instead.",
+   "rationale": "Undefined terms are the most visible symptom of the curse of knowledge. GOV.UK requires explaining specialist terms even for specialist audiences.",
+   "detect": [
+    "Three or more undefined acronyms in one sentence (pattern); any acronym not defined earlier (LLM check)",
+    "Internal project names or ticket codes with no explanation",
+    "HHS 2.6: define a term in context the first time; don't rely on a glossary or hover text",
+    "Simply Put: for a familiar acronym write HIV (human immunodeficiency virus); for an unfamiliar one write sudden infant death syndrome (SIDS)",
+    "usability.gov 15:4-15:5: use abbreviations only when much shorter and widely understood"
+   ],
+   "patterns": [
+    "(?:\\b(?!(?:API|URL|HTML|CSS|JSON|HTTPS?|SQL|PDF|CPU|GPU|RAM|USB|ID|UI|US|UK|EU|FAQ|CEO|AI|OK|TV|PR|CI|CD|DNS|SSH|AWS|IP|TLS|CLI|SDK|XML|CSV|UTC|IBM|NHS)\\b)[A-Z]{2,5}s?\\b(?!\\s*\\)|-\\d)[^.!?\\n]{0,50}){3}"
+   ],
+   "case_sensitive": true,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Abbreviations your reader uses daily (API, URL) don't need defining.",
+   "examples": [
+    {
+     "bad": "Per the TPS process, file an RFE with the ARB before EOD.",
+     "better": "Ask the architecture review board for an exception by 5 p.m. today.",
+     "note": ""
+    },
+    {
+     "bad": "ICSs will deliver their core purpose.",
+     "better": "Integrated care systems (local NHS partnerships) will run local health services.",
+     "note": "Built from a 2021 Golden Bull winner."
+    },
+    {
+     "bad": "Make sure DLQ depth stays low.",
+     "better": "Make sure few messages pile up in the dead-letter queue (DLQ), where failed messages go.",
+     "note": ""
+    },
+    {
+     "bad": "Your primary doctor may refer you to a neurologist.",
+     "better": "Your primary doctor may refer you to a neurologist. A neurologist is a doctor who treats problems related to the brain and nervous system.",
+     "note": "Human-identified: HHS Health Literacy Online 2.6."
+    }
+   ],
+   "source": "GOV.UK style guide; Google developer documentation style guide; Pinker, The Sense of Style (2014); Federal Plain Language Guidelines (plainlanguage.gov / digital.gov); HHS Health Literacy Online (2016); CDC Simply Put; Mailchimp Content Style Guide; Research-Based Web Design & Usability Guidelines (usability.gov), ch. 15; CDC Clear Communication Index",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-09",
+   "category": "clarity",
+   "name": "Give an example for every abstract claim",
+   "severity": "warn",
+   "dont": "General statements left in the air: a principle, a pattern, or a definition with no instance the reader can picture.",
+   "do": "Follow the claim with one concrete example: a specific input and output, a real sentence, a number, or a case.",
+   "rationale": "Pinker's diagnosis of a journal sentence about stimulus timing: the experiment was simple (taps on the wrist, elbow, and shoulder feel like a hop), but the authors never said so. Examples let readers check the claim.",
+   "detect": [
+    "A paragraph of claims with no instance, number, or quoted case",
+    "A definition with no example"
+   ],
+   "patterns": [],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "Caching can introduce consistency issues in distributed systems.",
+     "better": "Caching can show stale data. For example, a user changes their email, but the profile page shows the old one for 60 seconds.",
+     "note": ""
+    },
+    {
+     "bad": "(A journal sentence describing 'stimulus' and 'poststimulus events' in the abstract.)",
+     "better": "Tap someone's wrist, then elbow, then shoulder. They feel one tap hopping up the arm.",
+     "note": "Pinker's rabbit-illusion example in The Sense of Style. Described, not quoted."
+    }
+   ],
+   "source": "Pinker, The Sense of Style (2014); Sword, Zombie Nouns (NYT, 2012)",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-10",
+   "category": "clarity",
+   "name": "Use present tense",
+   "severity": "warn",
+   "dont": "Future and conditional tenses for things that are simply true: \"will return\", \"would display\", \"will be shown\".",
+   "do": "Describe behavior in the present: \"returns\", \"shows\".",
+   "rationale": "Present tense is the simplest verb form, and conditionals make readers ask 'would, if what?'",
+   "detect": [
+    "will/would + verb describing ordinary behavior in docs or UI text"
+   ],
+   "patterns": [
+    "\\b(?:would|will)\\s+(?:satisfy|apply|occur|happen|result)\\b",
+    "\\b(?:will|would)\\s+(?:be\\s+)?(?:return(?:ed)?|display(?:ed)?|show(?:n)?|appear|open(?:ed)?|creat(?:e|ed)|generat(?:e|ed)|redirect(?:ed)?|prompt(?:ed)?)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Use future tense for real future events (\"The API will be retired on June 1\").",
+   "examples": [
+    {
+     "bad": "These sections describe types of information that would satisfy the application requirements of Circular A-110 as it would apply to this grant program.",
+     "better": "These sections tell you how to meet the requirements of Circular A-110 for this grant program.",
+     "note": "Human-identified: plainlanguage.gov present-tense example."
+    },
+    {
+     "bad": "Clicking Save will display a confirmation message.",
+     "better": "When you click Save, a confirmation message appears.",
+     "note": ""
+    },
+    {
+     "bad": "The function would return null if the key is missing.",
+     "better": "The function returns null if the key is missing.",
+     "note": ""
+    }
+   ],
+   "source": "Federal Plain Language Guidelines (plainlanguage.gov / digital.gov); Google developer documentation style guide",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-11",
+   "category": "clarity",
+   "name": "Number steps, one action per step",
+   "severity": "warn",
+   "dont": "Procedures written as paragraphs (\"First, ... Then, ... After that, ... Finally, ...\"), and steps that bundle several actions.",
+   "do": "Use a numbered list for steps that happen in order. Give each step one action, starting with the verb.",
+   "rationale": "Readers carry out procedures one step at a time and need to find their place again. Google and the federal guidelines both call for numbered lists here.",
+   "detect": [
+    "Sequence words (first, then, next, after that, finally) chained across sentences in prose",
+    "A numbered step with two or more 'and then' actions",
+    "STE: one instruction per sentence; usability.gov 15:1: present steps in their natural order"
+   ],
+   "patterns": [
+    "(?:^|\\n)\\s*\\d+\\.\\s[^\\n]*\\band\\b[^\\n]*\\band\\s+then\\b",
+    "\\bFirst,[^.]{5,}\\.\\s+(?:Then|Next|After\\s+that|Second),",
+    "\\b(?:Next|Then),[^.]{5,}\\.\\s+(?:Finally|Lastly|After\\s+that),"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "A two-step sequence reads fine as one sentence.",
+   "examples": [
+    {
+     "bad": "First, open the settings. Then, find the API section. After that, copy the key. Finally, paste it into .env.",
+     "better": "1. Open Settings.\n2. In the API section, copy the key.\n3. Paste the key into .env.",
+     "note": ""
+    },
+    {
+     "bad": "3. Install the CLI and log in and then run init.",
+     "better": "3. Install the CLI.\n4. Log in.\n5. Run init.",
+     "note": ""
+    }
+   ],
+   "source": "Google developer documentation style guide; Federal Plain Language Guidelines (plainlanguage.gov / digital.gov); Microsoft Writing Style Guide; ASD-STE100 Simplified Technical English (via Wikipedia); Research-Based Web Design & Usability Guidelines (usability.gov), ch. 15; NIH/NCI Clear & Simple",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-12",
+   "category": "clarity",
+   "name": "Make list items parallel",
+   "severity": "warn",
+   "dont": "Lists that mix forms: a verb phrase, then a noun, then a full sentence; mixed capitalization or end punctuation.",
+   "do": "Start every item the same way (all verbs, or all nouns) and punctuate them the same way.",
+   "rationale": "Parallel items let the reader compare them at a glance. Mixed forms make each item a new parsing job.",
+   "detect": [
+    "List items that start with different parts of speech",
+    "Some items end with periods and others don't"
+   ],
+   "patterns": [],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "- Install dependencies\n- Configuration of the database\n- You should run the tests.",
+     "better": "- Install dependencies.\n- Configure the database.\n- Run the tests.",
+     "note": ""
+    },
+    {
+     "bad": "Benefits: faster builds, it's cheaper, and having fewer flaky tests.",
+     "better": "Benefits: faster builds, lower cost, and fewer flaky tests.",
+     "note": ""
+    }
+   ],
+   "source": "Google developer documentation style guide; Microsoft Writing Style Guide; Federal Plain Language Guidelines (plainlanguage.gov / digital.gov)",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-13",
+   "category": "clarity",
+   "name": "Avoid idioms and culture-bound references",
+   "severity": "warn",
+   "dont": "Idioms that don't translate or that some readers won't know: back burner, ballpark, boil the ocean, ducks in a row, hit the ground running, move the goalposts, piece of cake, silver bullet, bite the bullet, in the weeds, drink from a firehose, home run, slam dunk, Hail Mary; and seasons or holidays as dates.",
+   "do": "Say the literal meaning: later, rough estimate, try to do everything, prepared, start quickly, change the requirements, easy, single fix, accept the cost, deep in the details.",
+   "rationale": "Idioms fail for readers with limited English and in translation. Google's global-audience guide and 18F both rule them out.",
+   "detect": [
+    "Any listed idiom",
+    "'this summer', 'by Thanksgiving' as a deadline"
+   ],
+   "patterns": [
+    "\\b(?:back\\s+burner|ballpark|boil(?:ing)?\\s+the\\s+ocean|ducks\\s+in\\s+a\\s+row|hit\\s+the\\s+ground\\s+running|mov(?:e|ing)\\s+the\\s+goal\\s?posts|piece\\s+of\\s+cake|silver\\s+bullet|bite\\s+the\\s+bullet|in\\s+the\\s+weeds|drink(?:ing)?\\s+from\\s+a\\s+fire\\s?hose|home\\s+run|slam\\s+dunk|hail\\s+mary|across\\s+the\\s+board|par\\s+for\\s+the\\s+course|ballpark\\s+figure)\\b",
+    "\\b(?:by|before|after|this|next)\\s+(?:summer|winter|spring|fall|autumn|Thanksgiving|Christmas)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine in casual internal chat with people who share the idiom.",
+   "examples": [
+    {
+     "bad": "Let's put this on the back burner and get a ballpark figure.",
+     "better": "Let's pause this and get a rough estimate.",
+     "note": ""
+    },
+    {
+     "bad": "There's no silver bullet; we'll have to bite the bullet and rewrite it.",
+     "better": "No single fix will work. We need to rewrite the module.",
+     "note": ""
+    },
+    {
+     "bad": "We'll ship it this summer.",
+     "better": "We'll ship it by August 31.",
+     "note": "Google: seasons differ by hemisphere."
+    }
+   ],
+   "source": "Google developer documentation style guide; 18F content guide; Orwell, Politics and the English Language (1946); Mailchimp Content Style Guide; Microsoft Writing Style Guide",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-14",
+   "category": "clarity",
+   "name": "Keep paragraphs to one idea",
+   "severity": "warn",
+   "dont": "Paragraphs that cover several topics or run past five or six sentences.",
+   "do": "Give each paragraph one idea, stated early. Start a new paragraph when the topic changes.",
+   "rationale": "GOV.UK caps paragraphs at five sentences. The federal guidelines recommend no more than 150 words in three to eight sentences, never over 250, and say an occasional one-sentence paragraph is fine. In Morkes and Nielsen's 1997 studies, several users read only the first sentence of each paragraph while scanning. Their concise and scannable versions scored 58% and 47% better on overall usability.",
+   "detect": [
+    "Six or more sentences in one paragraph",
+    "Two unrelated topics in one paragraph",
+    "Over 150 words (warn) or 250 words (always split), per the federal guidelines",
+    "Paragraph targets by source: HHS 3 lines or fewer on the web; Simply Put 3-5 sentences; usability.gov and STE 6 or fewer; federal guidelines 150 words",
+    "usability.gov 15:11: the first sentence should state the paragraph's topic and scope, because readers skim the first one or two sentences"
+   ],
+   "patterns": [
+    "(?:[^.!?\\n]{3,}[.!?]\\s+){5,}[^.!?\\n]{3,}[.!?]"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "paragraph",
+   "exceptions": "Narrative and argument can run longer when each sentence builds on the last.",
+   "examples": [
+    {
+     "bad": "The build is slow. It takes 12 minutes. Most of that is tests. Also, the docs are out of date. Someone should update the README. And we need a new logo.",
+     "better": "The build takes 12 minutes, and most of that time is tests.\n\nSeparately, the README is out of date.",
+     "note": ""
+    },
+    {
+     "bad": "I fixed the login bug. The fix changes how tokens refresh. Separately, the deploy moved to Thursday. Also, Priya starts Monday. She needs a laptop. I ordered one yesterday.",
+     "better": "I fixed the login bug. The fix changes how tokens refresh.\n\nThe deploy moved to Thursday.\n\nPriya starts Monday, and I ordered her laptop yesterday.",
+     "note": "Three topics, three paragraphs."
+    }
+   ],
+   "source": "GOV.UK style guide; Nielsen & Morkes, NN/g (1997); Williams & Bizup, Style; Federal Plain Language Guidelines (2011), via plainlanguage.gov archive; HHS Health Literacy Online (2016); CDC Simply Put; Research-Based Web Design & Usability Guidelines (usability.gov), ch. 15; ASD-STE100 Simplified Technical English (via Wikipedia)",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-15",
+   "category": "clarity",
+   "name": "Keep only what the reader needs",
+   "severity": "warn",
+   "dont": "Background, history, statistics, and nice-to-know details placed before or around the action, and pieces that try to cover every angle.",
+   "do": "Separate need-to-know from nice-to-know and cut the rest, or link to it. Limit a section to three or four main ideas.",
+   "rationale": "HHS found many users want just the basics: 'Just tell me what I need to know.' NIH's Clear & Simple says to separate what readers need to know from what they want to know and what you want to tell them, and to cut the last two.",
+   "detect": [
+    "Background or history before the action the reader came for",
+    "More than three or four main ideas in one section",
+    "Statistics that don't change what the reader will do"
+   ],
+   "patterns": [],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "text",
+   "exceptions": "Reference documentation can be comprehensive; put the summary first.",
+   "examples": [
+    {
+     "bad": "(Three paragraphs on the history of the feature, then: 'To turn it on, open Settings.')",
+     "better": "To turn it on, open Settings > Features. (History is in the changelog.)",
+     "note": ""
+    },
+    {
+     "bad": "Blood pressure is the force of blood against the artery walls. It is measured in millimeters of mercury. Normal is below 120/80. Check it often.",
+     "better": "Check your blood pressure every 2 years, especially if you're 40 or older.",
+     "note": "Human-identified: HHS Health Literacy Online 2.3."
+    }
+   ],
+   "source": "HHS Health Literacy Online (2016); NIH/NCI Clear & Simple; CDC Simply Put; Mailchimp Content Style Guide",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-16",
+   "category": "clarity",
+   "name": "Say what to do, how, and why",
+   "severity": "warn",
+   "dont": "Text that informs but never says what the reader should do, or names an action without the steps or the reason.",
+   "do": "Give at least one specific action. Break it into small steps, and say why each step matters and what the reader gains.",
+   "rationale": "CDC's Clear Communication Index scores a call to action, an explanation of why the behavior matters, and directions for how to do it (items 5, 12-14). HHS found users want steps they can take right away, and explaining the 'why' and the benefit motivates action.",
+   "detect": [
+    "No imperative or 'you can' action in a message meant to prompt action",
+    "An action with no how-to steps",
+    "A step with no reason"
+   ],
+   "patterns": [],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Purely informational answers (a definition, a status report) need no call to action.",
+   "examples": [
+    {
+     "bad": "Following safety precautions can reduce food-borne disease transmission.",
+     "better": "Cook meat until it's no longer pink in the middle. Wash raw fruit and vegetables before you eat them.",
+     "note": "Human-identified: CDC Simply Put."
+    },
+    {
+     "bad": "Keep a food diary.",
+     "better": "Keep a food diary. Knowing what you eat now helps you decide what to change.",
+     "note": "Human-identified: HHS Health Literacy Online 2.5: explain the why."
+    },
+    {
+     "bad": "The deployment failed due to a config mismatch.",
+     "better": "The deployment failed because staging.env is missing DATABASE_URL. Add it, then run make deploy again.",
+     "note": ""
+    }
+   ],
+   "source": "CDC Clear Communication Index; HHS Health Literacy Online (2016); CDC Simply Put; NIH/NCI Clear & Simple",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-17",
+   "category": "clarity",
+   "name": "Make numbers easy to use",
+   "severity": "warn",
+   "dont": "Numbers the reader has to decode or compute: decimals and percentages where a whole number or 'X out of Y' works, relative risk without a baseline, numbers with no context, and words like 'high' or 'small' with no number.",
+   "do": "Use whole numbers or natural frequencies ('8 out of 10'), say what the number means (high or low, more or less than expected), do the math for the reader, and keep denominators the same when comparing.",
+   "rationale": "CDC's Clear Communication Index items 15-17 and 20: readers understand natural frequencies better than percentages, and absolute risk better than relative risk. Simply Put suggests leading with a general word and putting the statistic in parentheses.",
+   "detect": [
+    "Percent or decimal where a natural frequency would do",
+    "'X% more likely' with no baseline",
+    "'high', 'low', 'small', 'significant' with no number",
+    "A comparison that makes the reader divide or convert"
+   ],
+   "patterns": [
+    "\\b\\d+(?:\\.\\d+)?\\s*(?:%|percent)\\s+(?:more|less|higher|lower|greater)\\s+(?:likely|risk|chance)\\b",
+    "\\b\\d+\\.\\d{3,}\\b",
+    "\\b(?:a\\s+)?(?:high|low|small|large|significant)\\s+(?:risk|rate|number|percentage|amount|chance)\\b(?![^.!?]*\\d)"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Technical audiences reading benchmarks or financial data may need exact decimals.",
+   "examples": [
+    {
+     "bad": "Taking the drug makes a stroke 50% less likely.",
+     "better": "Without the drug, 2 out of 100 people like you have a stroke. With it, 1 out of 100 does.",
+     "note": ""
+    },
+    {
+     "bad": "90% of Americans believe vaccines are safe.",
+     "better": "Almost all Americans (90%) believe vaccines are safe.",
+     "note": "Human-identified: CDC Simply Put: general word first, number in parentheses."
+    },
+    {
+     "bad": "The error rate is high.",
+     "better": "The error rate is 4%, up from 0.5% last week.",
+     "note": ""
+    },
+    {
+     "bad": "Feel for lumps about 5 to 6 millimeters in diameter.",
+     "better": "Feel for lumps about the size of a pea.",
+     "note": "Human-identified: CDC Simply Put: a familiar comparison instead of a measurement."
+    }
+   ],
+   "source": "CDC Clear Communication Index; CDC Simply Put",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-18",
+   "category": "clarity",
+   "name": "Say what is known and what isn't",
+   "severity": "warn",
+   "dont": "Presenting uncertain findings as settled, or hiding the limits of a result.",
+   "do": "State what you know, what you don't, and what could change the answer, with the specific reason. Keep it to one sentence where possible.",
+   "rationale": "CDC's Clear Communication Index item 11 asks that materials acknowledge uncertainty and that guidance may change. This is the honest counterpart to FILL-04 and FILL-06, which cut reflexive hedges and generic disclaimers.",
+   "detect": [
+    "A conclusion with no stated basis or limit",
+    "A recommendation from incomplete data with no note that it may change"
+   ],
+   "patterns": [],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Don't stack hedges (FILL-04) or add vague disclaimers (FILL-06); name the specific unknown.",
+   "examples": [
+    {
+     "bad": "The fix resolves the memory leak.",
+     "better": "The fix stopped the leak in a 6-hour soak test. I haven't tested the 48-hour job, where it first appeared.",
+     "note": ""
+    },
+    {
+     "bad": "This vaccine prevents the new variant.",
+     "better": "In the first 2 published studies, people who got the vaccine had less severe illness from the new variant. We'll update this page as more data come in.",
+     "note": ""
+    }
+   ],
+   "source": "CDC Clear Communication Index",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-19",
+   "category": "clarity",
+   "name": "Write link text that says where it goes",
+   "severity": "warn",
+   "dont": "Links on 'click here', 'here', 'this', 'read more', or 'learn more', and bare URLs in running prose.",
+   "do": "Link the words that name the destination or action: 'Read the [setup guide]'.",
+   "rationale": "Screen-reader users often browse a list of links out of context, and every reader scans link text. Mailchimp, Google, and HHS all require descriptive links.",
+   "detect": [
+    "Link text of click here / here / this / read more / learn more / more / link"
+   ],
+   "patterns": [
+    "\\[(?:click\\s+here|here|this|read\\s+more|learn\\s+more|more|link|this\\s+link)\\]\\(",
+    "\\bclick\\s+here\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "For setup steps, [click here](https://example.org/setup).",
+     "better": "See the [setup guide](https://example.org/setup).",
+     "note": ""
+    },
+    {
+     "bad": "Learn more about pricing [here](https://example.org/pricing).",
+     "better": "Compare [plans and pricing](https://example.org/pricing).",
+     "note": ""
+    }
+   ],
+   "source": "Mailchimp Content Style Guide; Google developer documentation style guide; HHS Health Literacy Online (2016)",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-20",
+   "category": "clarity",
+   "name": "Don't depend on position, color, or images",
+   "severity": "warn",
+   "dont": "Instructions that only work if the reader sees the layout: 'above', 'below', 'in the right sidebar', 'the green button', 'see the screenshot'.",
+   "do": "Name the thing by its label and give the steps in text. Use numbered steps and visible labels.",
+   "rationale": "Layouts change on mobile, colors don't reach color-blind or screen-reader users, and images may not load. Mailchimp and Google both ban directional language in instructions.",
+   "detect": [
+    "above/below/left/right/sidebar as the only locator",
+    "color as the only identifier",
+    "'see the image' with no text equivalent"
+   ],
+   "patterns": [
+    "\\b(?:(?:in|on|from)\\s+the\\s+(?:left|right)(?:[- ]hand)?\\s+(?:side|sidebar|panel|column|menu)|(?:the|click\\s+the)\\s+(?:red|green|blue|orange|gray|grey)\\s+(?:button|link|icon)|(?:see|shown\\s+in)\\s+the\\s+(?:image|screenshot|picture|diagram)\\s+(?:above|below)|(?:listed|shown|described)\\s+(?:above|below))\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "'Below' is fine for a document's own structure in print, such as 'the table below' when the table follows immediately.",
+   "examples": [
+    {
+     "bad": "Select from the options in the right sidebar.",
+     "better": "Select one of these options:\n1. Daily\n2. Weekly",
+     "note": "Human-identified: Mailchimp Content Style Guide, writing for accessibility."
+    },
+    {
+     "bad": "Click the green button.",
+     "better": "Click Save.",
+     "note": ""
+    }
+   ],
+   "source": "Mailchimp Content Style Guide; Google developer documentation style guide; HHS Health Literacy Online (2016)",
+   "scan": "prose"
+  },
+  {
+   "id": "CLR-21",
+   "category": "clarity",
+   "name": "Choose words with one meaning",
+   "severity": "warn",
+   "dont": "Words that can be read two ways: 'since' (time or because), 'once' (one time or after), 'right' (correct or direction), 'while' (time or although), and nouns that are also verbs (file, report, record, screen) where the role is unclear.",
+   "do": "Use the unambiguous word: because, after, correct, although.",
+   "rationale": "Microsoft and Mailchimp both flag these words for global readers and translation. Simply Put asks for words with a single clear meaning.",
+   "detect": [
+    "Sentence-initial 'Since' meaning 'because'",
+    "'Once' meaning 'after'",
+    "'right' meaning 'correct'"
+   ],
+   "patterns": [
+    "(?:^|[.!?]\\s+)Since\\s+(?:you|we|the|it|this|that|they)\\b",
+    "(?:^|[.!?]\\s+)Once\\s+(?:you|we|the|it|this|that|they)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "'Since' is fine for time ('since 2019'); 'once' for a single occurrence.",
+   "examples": [
+    {
+     "bad": "Since you created the table, you can change it.",
+     "better": "Because you created the table, you can change it.",
+     "note": "Human-identified: Microsoft Writing Style Guide."
+    },
+    {
+     "bad": "Once the job finishes, deploy.",
+     "better": "After the job finishes, deploy.",
+     "note": "Human-identified: Mailchimp Content Style Guide, writing for translation."
+    },
+    {
+     "bad": "Make sure the setting is right.",
+     "better": "Make sure the setting is correct.",
+     "note": ""
+    }
+   ],
+   "source": "Microsoft Writing Style Guide; Mailchimp Content Style Guide; CDC Simply Put",
+   "scan": "prose"
+  },
+  {
+   "id": "ACT-01",
+   "category": "actors",
+   "name": "Make the actor the subject",
+   "severity": "error",
+   "dont": "Sentences whose subject is an abstract noun (request, decision, attempt) while the real actor hides in a possessive or a prepositional phrase.",
+   "do": "Put the person or thing that acts in the subject slot, and the action in the verb.",
+   "rationale": "A sentence is a small story. It reads fastest when the character is the subject and the action is the verb (Williams).",
+   "detect": [
+    "Subject is an abstract noun while a person or component is the real actor",
+    "Actor appears only as a possessive (the duck's arrival) or after 'by'",
+    "Passive with a by-phrase: the actor is named but not in the subject slot"
+   ],
+   "patterns": [
+    "\\b(?:the|a|an)\\s+(?:decision|request|determination|choice|recommendation|attempt)\\s+(?:to|for|was|is)\\b",
+    "\\bupon\\s+(?:the\\s+)?\\w+'s\\s+\\w+(?:al|ion|ment)\\b",
+    "\\b(?:is|are|was|were|has\\s+been|have\\s+been)\\s+\\w+(?:ed|en|ught)\\s+by\\s+(?:the|a|an|our|your|\\w+ing\\b|[A-Z]\\w+)"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine when the sentence is really about the object and the actor is known (\"The report is due Friday\").",
+   "examples": [
+    {
+     "bad": "A request for grapes was made upon the duck's arrival at the lemonade stand.",
+     "better": "A duck walked up to a lemonade stand and asked for grapes.",
+     "note": "Source example."
+    },
+    {
+     "bad": "The decision to drop the Redis cache was driven by latency concerns.",
+     "better": "I dropped the Redis cache because it slowed down requests.",
+     "note": ""
+    },
+    {
+     "bad": "A determination was made that the migration is safe to run.",
+     "better": "I checked the migration, and it's safe to run.",
+     "note": ""
+    },
+    {
+     "bad": "An attempt to reproduce the bug on main was unsuccessful.",
+     "better": "I couldn't reproduce the bug on main.",
+     "note": ""
+    },
+    {
+     "bad": "The lake was polluted by the company.",
+     "better": "The company polluted the lake.",
+     "note": "Human-identified: plainlanguage.gov active-voice example."
+    },
+    {
+     "bad": "The stock is bought by the investor.",
+     "better": "The investor buys the stock.",
+     "note": "Human-identified: SEC Plain English Handbook."
+    },
+    {
+     "bad": "Heart disease and lung cancer are caused by smoking.",
+     "better": "Smoking causes heart disease and lung cancer.",
+     "note": "Human-identified: CDC Simply Put."
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; Williams & Bizup, Style; Gopen & Swan, The Science of Scientific Writing (1990); Federal Plain Language Guidelines (plainlanguage.gov / digital.gov)",
+   "scan": "prose"
+  },
+  {
+   "id": "ACT-02",
+   "category": "actors",
+   "name": "Use verbs, not nominalizations",
+   "severity": "error",
+   "dont": "Actions buried in nouns (investigation, reduction, completion, verification), usually carried by an empty verb (make, perform, conduct, provide, do, carry out).",
+   "do": "Turn the noun back into a verb and drop the empty verb.",
+   "rationale": "Nominalizations make the reader rebuild the action, and they usually delete the actor.",
+   "detect": [
+    "Light verb + article + -tion/-ment/-ance/-ence/-al/-sis noun",
+    "\"X of the Y\" where X is a nominalized verb"
+   ],
+   "patterns": [
+    "\\b(?:make|makes|made|making|perform(?:s|ed|ing)?|conduct(?:s|ed|ing)?|carr(?:y|ies|ied) out|do|does|did|provid(?:e|es|ed|ing)|giv(?:e|es|en)|achiev(?:e|es|ed)|undert(?:ake|ook))\\s+(?:a|an|the|some)\\s+(?:\\w+\\s+)?(?!(?:sentence|difference|reference|experience|conference|audience|science|evidence|presence|sequence|licen[cs]e|balance|instance|distance|chance|appearance|performance|signal|total|request|proposal|deal|journal|manual|terminal|tutorial|interval|portal|server|failure|feature|picture|structure|figure|closure|procedure|basis|crisis)\\b)\\w+(?:tion|sion|ment|ance|ence|al|ure|sis)\\b",
+    "\\b\\w+(?:tion|ment|ance|ence)\\s+of\\s+(?:the|this|that|your|our)\\b",
+    "\\bhave\\s+(?:no|any|some)\\s+\\w+\\s+(?:ownership|knowledge|control|access|involvement)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Keep a nominalization that names an established thing (\"the migration\", \"authentication\") rather than an action. Sword: at their best, nominalizations name complex ideas (perception, epistemology). Linguists at Language Log note the real fault is needless length and a hidden actor, not the suffix itself.",
+   "examples": [
+    {
+     "bad": "I did an investigation of the failing test.",
+     "better": "I investigated the failing test.",
+     "note": ""
+    },
+    {
+     "bad": "This change provides a reduction in memory usage.",
+     "better": "This change cuts memory use.",
+     "note": ""
+    },
+    {
+     "bad": "Completion of the migration is pending confirmation from you.",
+     "better": "I'll finish the migration once you confirm.",
+     "note": ""
+    },
+    {
+     "bad": "I performed a verification of the fix against staging.",
+     "better": "I tested the fix on staging.",
+     "note": "I tested the staging fix."
+    },
+    {
+     "bad": "We conduct an analysis of the data.",
+     "better": "We analyze data.",
+     "note": "Human-identified: plainlanguage.gov hidden-verb example."
+    },
+    {
+     "bad": "We are responsible for management of the program.",
+     "better": "We manage the program.",
+     "note": "Human-identified: plainlanguage.gov hidden-verb example."
+    },
+    {
+     "bad": "We will have no stock ownership of the company.",
+     "better": "We will not own the company's stock.",
+     "note": "Human-identified: SEC Plain English Handbook."
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; Sword, Zombie Nouns (NYT, 2012); SEC Plain English Handbook (1998); Federal Plain Language Guidelines (plainlanguage.gov / digital.gov); Williams & Bizup, Style",
+   "scan": "prose"
+  },
+  {
+   "id": "ACT-03",
+   "category": "actors",
+   "name": "Say who did it",
+   "severity": "warn",
+   "dont": "Agentless passives for actions with a known actor: \"was updated\", \"were run\", \"mistakes were made\", \"it is believed that\".",
+   "do": "Name the actor (I, you, the script, the team, commit a1b2c3) and put it first.",
+   "rationale": "The passive hides whether Claude, the user, or a script made the change, and the reader needs that to trust the claim.",
+   "detect": [
+    "be-verb + past participle with no 'by' phrase where the actor is known",
+    "Status reports made entirely of passives",
+    "\"It is believed/thought/considered that\""
+   ],
+   "patterns": [
+    "\\b(?:was|were|has been|have been|had been|is being|are being|got)\\s+(?:\\w+ly\\s+)?\\w+(?:ed|en)\\b(?!\\s+by\\b)",
+    "\\b(?:was|were|has been|have been)\\s+(?:made|done|run|set|put|kept|left|sent|built|taken)\\b(?!\\s+by\\b)",
+    "\\bit\\s+is\\s+(?:believed|thought|considered|felt|known)\\s+that\\b",
+    "\\b(?:must|should|will|can|may|is|are)\\s+be\\s+(?:\\w+ly\\s+)?\\w+(?:ed|en)\\b(?!\\s+by\\b)",
+    "\\b(?:is|are)\\s+(?:\\w+ly\\s+)?(?:needed|required)\\b(?!\\s+(?:to|by|for)\\b)"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Use the passive when the actor is unknown or irrelevant (\"The package was deprecated in 2023\"), in error messages, or to keep a topic in subject position across sentences. GOV.UK also accepts the passive when the outcome matters more than the actor. Check that it really is passive: Pullum showed that Strunk & White misidentified three of their four 'passive' examples.",
+   "examples": [
+    {
+     "bad": "The config file was updated and the tests were run.",
+     "better": "I updated config.ts and ran the tests. All 42 pass.",
+     "note": ""
+    },
+    {
+     "bad": "The bug has been fixed.",
+     "better": "I fixed the bug in parseDate. It now handles time zones.",
+     "note": ""
+    },
+    {
+     "bad": "It is believed that the endpoint is deprecated.",
+     "better": "The API docs mark this endpoint as deprecated.",
+     "note": ""
+    },
+    {
+     "bad": "Changes were made to the auth flow to address the issue.",
+     "better": "I changed the login handler so expired tokens redirect to sign-in.",
+     "note": ""
+    },
+    {
+     "bad": "The following information must be included in the application for it to be considered complete.",
+     "better": "You must include the following information in your application.",
+     "note": "Human-identified: plainlanguage.gov."
+    },
+    {
+     "bad": "An electronic travel authorisation is needed.",
+     "better": "You need an electronic travel authorisation.",
+     "note": "Human-identified: GOV.UK clear-language guidance."
+    },
+    {
+     "bad": "Tests may be needed to find out what's wrong.",
+     "better": "You may need a test to find out what's wrong.",
+     "note": "Human-identified: HHS Health Literacy Online 2.6."
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; Declaude (danielrosehill/Declaude); stop-slop (hardikpandya/stop-slop); Federal Plain Language Guidelines (plainlanguage.gov / digital.gov); GOV.UK style guide; Army Regulation 25-50 (BLUF); SEC Plain English Handbook (1998); HHS Health Literacy Online (2016); CDC Simply Put; Mailchimp Content Style Guide; Research-Based Web Design & Usability Guidelines (usability.gov), ch. 15",
+   "scan": "prose"
+  },
+  {
+   "id": "ACT-04",
+   "category": "actors",
+   "name": "Don't let abstractions act",
+   "severity": "error",
+   "dont": "Abstract nouns or inanimate things doing human things: \"this change ensures\", \"the data tells us\", \"the decision emerged\", \"a complaint becomes a fix\", \"the culture shifts\", \"that gives us a vehicle\".",
+   "do": "Name the concrete thing and what it does, or name the person who acted.",
+   "rationale": "False agency sounds like an action but says nothing checkable, and it avoids naming who did the work.",
+   "detect": [
+    "Subject is this/that/the change/fix/approach/data/result/decision/market/culture with a human verb (ensures, unlocks, tells, emerges, rewards, settles, becomes)"
+   ],
+   "patterns": [
+    "\\b(?:(?:this|that)(?:\\s+(?:change|fix|refactor|approach|design|update|PR|commit))?|the\\s+(?:change|fix|refactor|approach|design|data|evidence|result|update|work))\\s+(?:ensures|unlocks|enables|settles|surfaces|drives|buys|gives\\s+us|points\\s+to|tells\\s+us|speaks\\s+to|addresses)\\b",
+    "\\b(?:the\\s+)?(?:data|numbers|market|culture|conversation|decision|complaint)\\s+(?:tells|shows us|rewards|shifts|emerges|emerged|moves toward|becomes|became)\\b",
+    "^What this (?:settles|means|tells us)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Standard technical phrasing is fine when literal (\"the function returns null\", \"the test fails\").",
+   "examples": [
+    {
+     "bad": "This refactor unlocks a cleaner seam for future work.",
+     "better": "You can now add a payment provider without editing the router.",
+     "note": ""
+    },
+    {
+     "bad": "The data tells us users prefer the old layout.",
+     "better": "In the A/B test, 61% of users switched back to the old layout.",
+     "note": ""
+    },
+    {
+     "bad": "What this settles. Nothing was wrong with CUDA.",
+     "better": "The slowdown came from the kernel design. CUDA itself was fine.",
+     "note": "From the zonderlabs Claude Code sample."
+    },
+    {
+     "bad": "Within a week, the complaint became a fix.",
+     "better": "The team fixed it within a week of the complaint.",
+     "note": "stop-slop example."
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; stop-slop (hardikpandya/stop-slop)",
+   "scan": "prose"
+  },
+  {
+   "id": "ACT-05",
+   "category": "actors",
+   "name": "Use \"is\" and \"has\"",
+   "severity": "warn",
+   "dont": "Fancy stand-ins for is/are/has: serves as, stands as, functions as, acts as, represents, marks, boasts, features, offers, maintains, refers to.",
+   "do": "Use \"is\", \"are\", or \"has\" unless the fancier verb adds real meaning.",
+   "rationale": "LLM text measurably avoids plain copulas. The substitutes add a promotional tone and no information.",
+   "detect": [
+    "serves/stands/functions/acts as + noun phrase",
+    "boasts/features/offers where 'has' fits",
+    "\"X refers to\" in a sentence about X itself"
+   ],
+   "patterns": [
+    "\\b(?:serves|served|stands|stood|functions|acts)\\s+as\\s+(?:a|an|the)\\b",
+    "\\bboasts?\\b",
+    "\\b(?:features|offers)\\s+(?:a|an|\\d|several|multiple|many)\\b",
+    "\\brefers\\s+to\\s+(?:a|an|the)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "\"Represents\" is fine for literal representation (a variable represents a value). \"Features\" is fine as a noun.",
+   "examples": [
+    {
+     "bad": "Gallery 825 serves as the association's exhibition space. The gallery features four separate rooms.",
+     "better": "Gallery 825 is the association's exhibition space. It has four rooms.",
+     "note": "Wikipedia example."
+    },
+    {
+     "bad": "The utils module serves as the central hub for shared helpers.",
+     "better": "The utils module holds the shared helpers.",
+     "note": ""
+    },
+    {
+     "bad": "The new release boasts improved startup time.",
+     "better": "The new release starts about 30% faster.",
+     "note": ""
+    },
+    {
+     "bad": "This endpoint functions as a health check.",
+     "better": "This endpoint is a health check.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer)",
+   "scan": "prose"
+  },
+  {
+   "id": "ACT-06",
+   "category": "actors",
+   "name": "State relationships directly",
+   "severity": "warn",
+   "dont": "Vague links between subjects: \"associated with\", \"connected to\", \"in connection with\", and stiff source framing like \"records identify him as\", \"his profile lists\".",
+   "do": "Say the actual relationship with a plain verb: worked at, wrote, owns, calls, depends on.",
+   "rationale": "\"Associated with\" hides what the relationship is. The reader can't tell whether X built, owns, uses, or merely appears near Y.",
+   "detect": [
+    "associated/connected with or to, in connection with",
+    "[source] identifies/lists/records [subject] as"
+   ],
+   "patterns": [
+    "\\b(?:closely\\s+|widely\\s+|particularly\\s+)?(?:associated|connected)\\s+(?:with|to)\\b",
+    "\\bin\\s+connection\\s+(?:with|to)\\b",
+    "\\b(?:identifies|lists|records|describes)\\s+(?:him|her|them|it|the\\s+\\w+)\\s+as\\b",
+    "\\b(?:biography|profile|records?|database|listing)\\s+(?:records|lists|notes|states)\\s+that\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "\"Associated\" is fine as a technical term (an associated type, a file association).",
+   "examples": [
+    {
+     "bad": "In 2017, Jane Doe was associated with the leadership of ExampleCorp.",
+     "better": "In 2017, Jane Doe was CEO of ExampleCorp.",
+     "note": "Adapted from Wikipedia."
+    },
+    {
+     "bad": "The failures appear connected to the cache layer.",
+     "better": "The failures happen only when the cache returns a stale entry.",
+     "note": ""
+    },
+    {
+     "bad": "His parliamentary biography records that he served as president of the club.",
+     "better": "He was president of the club.",
+     "note": "Wikipedia example."
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-01",
+   "category": "words",
+   "name": "Break up noun stacks",
+   "severity": "error",
+   "dont": "Three or more nouns, or chains of hyphenated modifiers, packed into one phrase: \"user-session entry boundary\", \"grape availability request\", \"vision-and-transcript pass\".",
+   "do": "Unpack the stack into a clause with a verb and prepositions.",
+   "rationale": "Stacked nouns hide how the words relate. This was the most common fault in Claude Code replies.",
+   "detect": [
+    "3+ nouns in a row acting as one phrase",
+    "Hyphenated compound modifiers stacked before a noun",
+    "Possessive on an abstract noun (a label's awareness entry)",
+    "Google's limit: no more than two nouns stacked before another noun",
+    "STE caps multi-word nouns at three words; Google at two nouns before a noun; Microsoft: avoid modifier stacks"
+   ],
+   "patterns": [
+    "\\b\\w+'s\\s+\\w+\\s+(?:entry|boundary|floor|pass|gate)\\b",
+    "\\b[a-z]+(?:-[a-z]+)+\\s+(?:[a-z]+\\s+)?(?:boundary|surface|layer|pass|entry|floor|path|regime|check|gate|handler|flow)\\b",
+    "\\b(?:\\w+\\s+){2}(?:availability|readiness|awareness|entry|boundary|floor)\\s+(?:\\w+)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Established compounds are fine (\"database connection pool\", \"pull request\").",
+   "examples": [
+    {
+     "bad": "The database readiness check sits at the user-session entry boundary, before the authentication handler runs.",
+     "better": "When a user's session starts, we check that the database is ready. This happens before authentication.",
+     "note": "Source example."
+    },
+    {
+     "bad": "The length floor drops a block.",
+     "better": "If a section is shorter than the minimum length, it gets removed.",
+     "note": "Source example. Meaning is a guess."
+    },
+    {
+     "bad": "I added a vision-and-transcript pass.",
+     "better": "I added a step that checks both the video frames and the transcript.",
+     "note": "Source example."
+    },
+    {
+     "bad": "This is a label's awareness entry.",
+     "better": "This entry records which labels the model knows about.",
+     "note": "Source example. Meaning is a guess."
+    },
+    {
+     "bad": "With an extremely well thought-out Windows migration project plan, your migration will go more smoothly.",
+     "better": "Your migration will go more smoothly if you have a project plan that's well thought out.",
+     "note": "Human-identified: Microsoft Writing Style Guide, global writing tips."
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; Humanizer (blader/humanizer); Google developer documentation style guide; Microsoft Writing Style Guide; ASD-STE100 Simplified Technical English (via Wikipedia)",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-02",
+   "category": "words",
+   "name": "Call things by their ordinary name",
+   "severity": "error",
+   "dont": "Categories, inflated verbs, and formal synonyms in place of the plain word: beverage retailer, compute substrate, utilize, leverage, facilitate, persistence layer, invocation site.",
+   "do": "Use the word a colleague would use: lemonade stand, GPU, use, help, the database, where it's called.",
+   "rationale": "The source names this as the AI-specific failure: word combinations no person would choose.",
+   "detect": [
+    "Category word where the specific thing is known",
+    "Inflated verbs (utilize, leverage, facilitate, optimize, empower)",
+    "GOV.UK: use the words your users search for ('lorry', not 'heavy goods vehicle')"
+   ],
+   "patterns": [
+    "\\b(?:utiliz(?:e|es|ed|ing|ation)|leverag(?:e|es|ed|ing)|facilitat(?:e|es|ed|ing)|empower(?:s|ed|ing)?|substrate|beverage retailer|persistence layer|invocation site|execution surface|codepath)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Use the formal term when it's the precise one and the reader knows it (\"leverage\" in finance).",
+   "examples": [
+    {
+     "bad": "The duck made a grape availability request as he arrived at the beverage retailer.",
+     "better": "The duck walked up to the lemonade stand and asked if they had grapes.",
+     "note": "Source example."
+    },
+    {
+     "bad": "We leverage the persistence layer to facilitate session continuity.",
+     "better": "We store sessions in Postgres so users stay logged in.",
+     "note": ""
+    },
+    {
+     "bad": "I utilized the compute substrate more efficiently.",
+     "better": "The job now uses the GPU more efficiently.",
+     "note": ""
+    },
+    {
+     "bad": "The invocation site passes a null config.",
+     "better": "The code that calls loadConfig passes null.",
+     "note": ""
+    },
+    {
+     "bad": "The cognitive process that staff will go through when interpreting prescriptions and selecting drugs is almost intuitive.",
+     "better": "Our pharmacists know the drugs well, so they read prescriptions quickly.",
+     "note": "Human-identified: Plain English Campaign Golden Bull, 2003 (Lloyds pharmacy). Rewrite is ours."
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; Declaude (danielrosehill/Declaude); Humanizer (blader/humanizer); Orwell, Politics and the English Language (1946); GOV.UK style guide; 18F content guide",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-03",
+   "category": "words",
+   "name": "Don't coin terms the reader hasn't seen",
+   "severity": "error",
+   "dont": "Invented labels used as if the reader knows them: \"the warm regime\", \"fat-CTA design\", \"CUDA-only knobs\", \"the ruler\", \"lab-check\".",
+   "do": "Say the plain thing, or define the term once the first time you use it.",
+   "rationale": "Coined labels make sense to the writer, who has the context. The reader has to reverse-engineer them.",
+   "detect": [
+    "A noun phrase introduced with 'the' as if already known",
+    "Hyphenated coinages",
+    "Metaphor used as a technical term"
+   ],
+   "patterns": [
+    "\\b(?:warm|cold|hot|fat|thin)[- ](?:regime|CTA)\\b",
+    "\\b\\w+-only\\s+knobs?\\b",
+    "\\bthe\\s+(?:ruler|vehicle|floor|ceiling|lever|knob)\\b",
+    "\\blab-check(?:ed|ing)?\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine when the term is defined in the same reply or is standard in the user's codebase.",
+   "examples": [
+    {
+     "bad": "The ruler is a floor, and the report should say so.",
+     "better": "The benchmark gives only a lower bound on errors. The report should say that.",
+     "note": "\"Claude Tzu\" line from the source."
+    },
+    {
+     "bad": "The first CUDA-only knobs already buy 3 to 5% on qkv.",
+     "better": "Two settings that only CUDA exposes already make the qkv kernel 3% to 5% faster.",
+     "note": ""
+    },
+    {
+     "bad": "The one remaining warm-regime gap is purely stage depth.",
+     "better": "On repeated runs, one kernel is still slower. The cause is the number of pipeline stages.",
+     "note": ""
+    },
+    {
+     "bad": "Next: lab-check it on the H200.",
+     "better": "Next, I'll test it on the H200.",
+     "note": ""
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-04",
+   "category": "words",
+   "name": "Make every pointer word resolvable",
+   "severity": "warn",
+   "dont": "\"It\", \"this\", \"that\", \"the issue\", \"the gap\" with no single clear referent in the previous sentence.",
+   "do": "Repeat the noun, or rewrite so the referent is obvious.",
+   "rationale": "Ambiguous references force the reader to scroll back and guess.",
+   "detect": [
+    "Sentence starts with This/That/It + verb and the previous sentence has several candidates",
+    "\"the issue/problem/gap\" with no earlier mention"
+   ],
+   "patterns": [
+    "(?:^|[.!?]\\s+)(?:This|That|It|These|Those)\\s+(?:is|was|fixes|means|should|will|does|handles|covers|works)\\b",
+    "\\bthe\\s+(?:issue|problem|gap|thing|piece|part)\\b",
+    "\\bmake\\s+sure\\s+(?:that\\s+)?it'?s\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "\"This\" is fine when the previous sentence has one obvious referent.",
+   "examples": [
+    {
+     "bad": "I updated the retry logic and the timeout. This should fix it.",
+     "better": "Raising the timeout to 30 seconds should fix the flaky upload test.",
+     "note": ""
+    },
+    {
+     "bad": "That covers the main case. The other one needs more work.",
+     "better": "The fix handles logged-in users, but guest checkout still fails.",
+     "note": "Comma restored: 'but' joins two independent clauses (see FMT-13)."
+    },
+    {
+     "bad": "The gap is real but modest.",
+     "better": "Claude's error rate is higher than the human rate but only slightly.",
+     "note": "\"Claude Tzu\" line from the source."
+    },
+    {
+     "bad": "Make sure that it's targeted.",
+     "better": "Make sure that the ad is targeted.",
+     "note": "Human-identified: Google developer documentation style guide."
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; Google developer documentation style guide; Mailchimp Content Style Guide; Microsoft Writing Style Guide",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-05",
+   "category": "words",
+   "name": "State technical claims literally",
+   "severity": "warn",
+   "dont": "Metaphors standing in for technical claims: a setting \"buys\" speed, a check \"sits at\" a boundary, a result \"tells a story\", a fix \"closes the gap\".",
+   "do": "Say the literal claim with the number or mechanism.",
+   "rationale": "Metaphors make the reader translate back to the literal claim, and the translation can go wrong.",
+   "detect": [
+    "Economic verbs for performance (buys, costs, pays for)",
+    "Spatial verbs for code flow (sits at, lives in, surfaces)",
+    "Narrative words for data (story, shape, picture)",
+    "Orwell's 'dying metaphors' and GOV.UK/18F's figurative-verb list: drive, tackle, land, ring-fence, one-stop shop"
+   ],
+   "patterns": [
+    "\\b(?:buys?|bought)\\s+(?:us\\s+)?(?:about\\s+|roughly\\s+|~)?\\d+\\s*(?:%|ms|x\\b|percent|seconds?|minutes?)",
+    "\\b(?:sits|lives)\\s+(?:at|in|on)\\b",
+    "\\b(?:the\\s+)?(?:better|real|whole|bigger)\\s+(?:story|picture)\\b",
+    "\\bshape of the\\b",
+    "\\b(?:will\\s+)?close(?:s|d)? (?:the|that) gap\\b",
+    "\\bwill close it\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Idioms engineers read literally are fine (\"the fix landed in main\").",
+   "examples": [
+    {
+     "bad": "The shape of the defects is the better story than the height of the bars.",
+     "better": "Which kinds of errors appear matters more than how many there are.",
+     "note": "\"Claude Tzu\" line from the source."
+    },
+    {
+     "bad": "8 or 9 stages will close it.",
+     "better": "Using 8 or 9 pipeline stages should make it as fast as the Triton version.",
+     "note": ""
+    },
+    {
+     "bad": "The validation sits at the API boundary.",
+     "better": "We validate input in the request handler, before it reaches the service layer.",
+     "note": ""
+    },
+    {
+     "bad": "This buys us about 20 ms.",
+     "better": "This saves about 20 ms per request.",
+     "note": ""
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; 18F content guide; Orwell, Politics and the English Language (1946); Google developer documentation style guide",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-06",
+   "category": "words",
+   "name": "Replace AI-marker words",
+   "severity": "error",
+   "dont": "Words that mark text as machine-written even once (avoid-ai-writing Tier 1A): delve, tapestry, realm, paradigm, embark, beacon, testament to, robust, pivotal, underscore, meticulous, seamless, watershed moment, thriving, showcase, bustling, intricate, interplay, ever-evolving, enduring, daunting, landscape (metaphor), journey (metaphor), symphony/dance/orchestra of (metaphor), embrace (metaphor), load-bearing (metaphor). Also \"Additionally,\" to open a sentence.",
+   "do": "Use the plain word (explore, area, start, shows, strong, important, careful, smooth, complex, lasting, hard), or replace the word with the fact that would justify it.",
+   "rationale": "These words are over-represented in LLM output by large margins (Wikipedia's era lists; Antislop's measured frequency lists). Readers who know the list stop trusting the text at the first hit.",
+   "detect": [
+    "Any listed word in its figurative sense",
+    "Sentence-initial 'Additionally,'",
+    "Promotional adjectives live in WORD-10 and jargon in WORD-07; this rule covers the rest"
+   ],
+   "patterns": [
+    "\\b(?:delv(?:e|es|ed|ing)|tapestr(?:y|ies)|realms?|paradigms?|embark(?:s|ed|ing)?|beacon|testament\\s+to|robust(?:ly|ness)?|pivotal|underscor(?:e|es|ed|ing)|meticulous(?:ly)?|seamless(?:ly)?|watershed\\s+moment|thriving|showcas(?:e|es|ed|ing)|bustling|intricac(?:y|ies)|intricate(?:ly)?|interplay|ever-(?:evolving|changing)|enduring|daunting)\\b",
+    "(?:^|[.!?]\\s+)Additionally,",
+    "\\b(?:the\\s+)?(?:evolving|ever-changing|complex|competitive|current|digital)\\s+landscape\\b",
+    "\\b(?:symphony|dance|orchestra|kaleidoscope)\\s+of\\b",
+    "\\b(?:journey|embrac(?:e|es|ed|ing))\\s+(?:of|toward|towards|the\\s+(?:change|shift|future))\\b",
+    "\\bload-bearing\\s+(?!wall|beam|column|structure)\\w+"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Literal or technical senses are fine: robust statistics, an underscore character, a load-bearing wall, a journey in a travel log. Synonyms are not suspect by default.",
+   "examples": [
+    {
+     "bad": "Additionally, this robust solution showcases a seamless integration.",
+     "better": "It also works with the existing billing system without code changes.",
+     "note": ""
+    },
+    {
+     "bad": "Let's delve into the intricate interplay between the scheduler and the queue.",
+     "better": "The scheduler and the queue interact in two places: retries and backpressure.",
+     "note": ""
+    },
+    {
+     "bad": "This release marks the next step in our journey toward a more robust platform.",
+     "better": "This release adds retries to every outbound call.",
+     "note": ""
+    },
+    {
+     "bad": "The report underscores the pivotal role of caching, a testament to meticulous engineering.",
+     "better": "The report found caching cut page load time from 2.1 s to 0.6 s.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); Declaude (danielrosehill/Declaude); no-ai-slop (realrossmanngroup); avoid-ai-writing (conorbronsdon); Antislop (sam-paech)",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-07",
+   "category": "words",
+   "name": "Cut business jargon",
+   "severity": "error",
+   "dont": "Corporate filler: circle back, touch base, reach out, move the needle, low-hanging fruit, going forward / moving forward, bandwidth (for time), actionable insights, best practices, value-add, end-to-end, deep dive, unpack, navigate (challenges), lean into, double down, game-changer, paradigm shift, synergy, holistic, on the same page, take it offline, at the end of the day. Plus the GOV.UK and 18F list: deliver (for abstract things), drive (for schemes), tackle, progress (as a verb), key (unless it unlocks something), impact (as a verb), dialogue, liaise, incentivize, ring-fence, slim down, one-stop shop, touchpoint, thought leader, transform. The Plain English Campaign's management-speak list adds: blue-sky thinking, pushing the envelope, take it to the next level, bring to the table, core competencies, be proactive not reactive. Mailchimp's word list adds: automagical, ninja, rockstar, wizard, unicorn (unless literal), crushing it, killing it, best-in-breed, rise and grind, disruptor, funnel, learnings.",
+   "do": "Use the plain verb or noun: follow up, contact, improve, easy wins, from now on, time, findings, explain, handle.",
+   "rationale": "Jargon signals effort without content and often hides who will do what.",
+   "detect": [
+    "Any listed phrase"
+   ],
+   "patterns": [
+    "\\b(?:circle\\s+back|touch\\s+base|reach(?:ing)?\\s+out|move\\s+the\\s+needle|low-hanging\\s+fruit|going\\s+forward|moving\\s+forward|actionable\\s+insights?|best\\s+practices|value-add|deep\\s+dive|unpack(?:s|ed|ing)?|navigat(?:e|es|ing)\\s+(?:the\\s+)?(?:challenges?|complexit)|lean(?:s|ing)?\\s+into|doubl(?:e|ed|ing)\\s+down|game[- ]chang(?:er|ing)|paradigm\\s+shift|synerg(?:y|ies)|holistic(?:ally)?|on\\s+the\\s+same\\s+page|take\\s+it\\s+offline|at\\s+the\\s+end\\s+of\\s+the\\s+day|think\\s+outside\\s+the\\s+box|win-win)\\b",
+    "\\b(?:no|have|don't\\s+have|the)\\s+bandwidth\\b",
+    "\\b(?:share\\s+of\\s+wallet|capital[- ]light|operating\\s+model|key\\s+component|core\\s+purpose|value\\s+proposition|deliverables?|learnings)\\b",
+    "\\b(?:deliver(?:s|ed|ing)?\\s+(?:on\\s+)?(?:outcomes?|value|results?|change|priorities|objectives|our\\s+\\w+)|driv(?:e|es|ing)\\s+(?:growth|change|adoption|engagement|innovation|value)|tackl(?:e|es|ed|ing)\\s+(?:the\\s+)?(?:issue|problem|challenge)s?|progress(?:ing)?\\s+(?:the|this|our)\\s+\\w+|impact(?:s|ed|ing)?\\s+(?:the|our|your|their)\\b|liais(?:e|es|ed|ing)|incentiviz(?:e|es|ed|ing)|incentivis(?:e|es|ed|ing)|ring[- ]fenc(?:e|ed|ing)|one-stop\\s+shop|touchpoints?|thought\\s+leaders?(?:hip)?)\\b",
+    "\\b(?:blue[- ]sky\\s+thinking|push(?:ing)?\\s+the\\s+envelope|take\\s+it\\s+to\\s+the\\s+next\\s+level|bring\\s+(?:it\\s+)?to\\s+the\\s+table|core\\s+competenc(?:y|ies)|be\\s+proactive|client\\s+focus|there\\s+is\\s+no\\s+'?i'?\\s+in\\s+team)\\b",
+    "\\b(?:automagical(?:ly)?|rock\\s?stars?|ninjas?|unicorns?|crushing\\s+it|killing\\s+it|best[- ]in[- ]breed|rise\\s+and\\s+grind|disruptors?)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "\"End-to-end\" is fine as a test type; \"bandwidth\" is fine for networks.",
+   "examples": [
+    {
+     "bad": "Let's circle back on this going forward once we have bandwidth.",
+     "better": "Let's revisit this next sprint.",
+     "note": ""
+    },
+    {
+     "bad": "I'll do a deep dive to unpack the low-hanging fruit.",
+     "better": "I'll look for the easy fixes first.",
+     "note": ""
+    },
+    {
+     "bad": "This is a game-changer that will move the needle on retention.",
+     "better": "The change should raise 30-day retention. I'll measure it after two weeks.",
+     "note": ""
+    },
+    {
+     "bad": "Feel free to reach out if you want to touch base.",
+     "better": "Message me if you want to talk it through.",
+     "note": ""
+    },
+    {
+     "bad": "increase the share of wallet opportunity through a new capital light and low risk operating model",
+     "better": "sell more to the customers we have, cheaply and with little risk",
+     "note": "Human-identified: Plain English Campaign Golden Bull, 2021 (boohoo). Rewrite paraphrases the Campaign's translation."
+    },
+    {
+     "bad": "provider collaboratives will be a key component in enabling ICSs to deliver their core purpose",
+     "better": "groups of healthcare providers working together will help local health systems do their main job",
+     "note": "Human-identified: Plain English Campaign Golden Bull, 2021 (NHS England). Rewrite paraphrases the Campaign's translation."
+    }
+   ],
+   "source": "Declaude (danielrosehill/Declaude); stop-slop (hardikpandya/stop-slop); GOV.UK style guide; 18F content guide; Plain English Campaign; Plain English Campaign examples; Mailchimp Content Style Guide",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-08",
+   "category": "words",
+   "name": "Cut intensifiers and softeners",
+   "severity": "warn",
+   "dont": "Adverbs that add emphasis or sincerity but no meaning: really, very, just, literally, genuinely, honestly, simply, actually, deeply, truly, fundamentally, inherently, incredibly, extremely, absolutely, definitely, importantly, crucially, interestingly.",
+   "do": "Delete the adverb. If the sentence feels weak without it, replace the claim with a stronger fact.",
+   "rationale": "Intensifiers try to make a claim feel bigger; softeners try to make the writer seem sincere. Both read as filler.",
+   "detect": [
+    "Any listed adverb",
+    "More than one -ly adverb per sentence",
+    "'the real/actual X' with no named fake X; moral adjectives on non-moral things ('honest caveat', 'honestly flagged')"
+   ],
+   "patterns": [
+    "\\b(?:really|very|literally|genuinely|honestly|simply|actually|deeply|truly|fundamentally|inherently|incredibly|extremely|absolutely|definitely|interestingly|crucially)\\b",
+    "\\bthe\\s+(?:real|actual|true)\\s+(?:problem|question|issue|story|answer|work|reason)\\b",
+    "\\bhonest(?:ly)?\\s+(?:shape|caveat|take|assessment|flag(?:ged)?|answer|number)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Keep adverbs that carry information (\"runs nightly\", \"fails intermittently\"). \"Just\" meaning \"only\" or \"a moment ago\" is fine.",
+   "examples": [
+    {
+     "bad": "This is genuinely a really important fix.",
+     "better": "This fix stops duplicate charges.",
+     "note": ""
+    },
+    {
+     "bad": "I simply updated the config and it actually works now.",
+     "better": "I updated the config, and the import job now succeeds.",
+     "note": ""
+    },
+    {
+     "bad": "Honestly, the test suite is fundamentally broken.",
+     "better": "The test suite fails on a clean checkout: 12 tests depend on a local .env file.",
+     "note": ""
+    },
+    {
+     "bad": "The real problem is the honest shape of the data.",
+     "better": "Half the rows are missing a timestamp.",
+     "note": "avoid-ai-writing pattern."
+    }
+   ],
+   "source": "stop-slop (hardikpandya/stop-slop); Humanizer (blader/humanizer); avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-09",
+   "category": "words",
+   "name": "Use one name for one thing",
+   "severity": "warn",
+   "dont": "Rotating synonyms for the same referent (the function, the helper, the utility, the method) to avoid repetition.",
+   "do": "Pick one name and keep it. Repetition is clearer than variety.",
+   "rationale": "Readers assume a new word means a new thing. Synonym cycling makes them wonder whether you mean one object or several.",
+   "detect": [
+    "The same referent called by two or more different nouns within a reply"
+   ],
+   "patterns": [],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "The parseDate function fails on ISO strings. The helper also ignores offsets, so the utility returns UTC.",
+     "better": "The parseDate function fails on ISO strings. parseDate also ignores offsets, so it returns UTC.",
+     "note": ""
+    },
+    {
+     "bad": "The protagonist meets a stranger. Later, the hero returns home, where the young man finds a letter.",
+     "better": "Anna meets a stranger. Later, Anna returns home and finds a letter.",
+     "note": ""
+    },
+    {
+     "bad": "Restart the worker. Once the daemon is up, check that the process is healthy.",
+     "better": "Restart the worker. After it starts, check that the worker is healthy.",
+     "note": ""
+    },
+    {
+     "bad": "Mad cow disease ... bovine spongiform encephalitis ...",
+     "better": "Pick one name and use it every time.",
+     "note": "Human-identified: CDC Simply Put: readers may think the two names are two diseases."
+    }
+   ],
+   "source": "Humanizer (blader/humanizer); zonderlabs.com/slop + x.com/zhizdev thread; Google developer documentation style guide; Federal Plain Language Guidelines (plainlanguage.gov / digital.gov); Microsoft Writing Style Guide; Mailchimp Content Style Guide; CDC Simply Put",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-10",
+   "category": "words",
+   "name": "Don't use promotional language",
+   "severity": "error",
+   "dont": "Sales-brochure adjectives and puffery: nestled, breathtaking, stunning, rich history, world-class, best-in-class, cutting-edge, state-of-the-art, revolutionary, groundbreaking, comprehensive, mission-critical, empower.",
+   "do": "Describe the thing plainly, and give the specific fact that would earn the adjective.",
+   "rationale": "Puffery replaces specific facts with generic praise. The subject gets louder and blurrier at the same time. In Nielsen and Morkes's 1997 study, an objective rewrite of promotional web text scored 27% better on overall usability (only the satisfaction gain was statistically significant). A Sun customer in the same research put it plainly: they wanted fact, not platitudes.",
+   "detect": [
+    "Any listed adjective used to praise rather than describe",
+    "'innovative' and other evaluation words are counted by WORD-13"
+   ],
+   "patterns": [
+    "\\b(?:nestled|breathtaking|stunning|rich\\s+(?:history|heritage)|world-class|best-in-class|cutting-edge|state-of-the-art|revolutionary|groundbreaking|comprehensive|mission-critical|unparalleled|second\\s+to\\s+none)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine inside a quotation or when the term is literal (\"state-of-the-art\" in an ML benchmark table with the score).",
+   "examples": [
+    {
+     "bad": "Nestled in the breathtaking hills, the town boasts a rich history.",
+     "better": "The town, founded in 1854, is in the hills 20 miles north of Austin.",
+     "note": ""
+    },
+    {
+     "bad": "We built a comprehensive, cutting-edge test harness.",
+     "better": "The test harness covers all 34 API endpoints and runs in four minutes.",
+     "note": ""
+    },
+    {
+     "bad": "An innovative, best-in-class approach to caching.",
+     "better": "A caching layer that cut database reads by 70%.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); Declaude (danielrosehill/Declaude); Nielsen & Morkes, NN/g (1997)",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-11",
+   "category": "words",
+   "name": "Keep the small words; write full sentences",
+   "severity": "warn",
+   "dont": "Headline fragments, label-colon shorthand, and dropped articles: \"Next: tune knobs\", \"Same algorithm, same numbers\", \"Done: tests green, PR up.\"",
+   "do": "Keep articles, verbs, and connecting words.",
+   "rationale": "Dropped words save the writer a few characters and cost the reader the relationships between ideas.",
+   "detect": [
+    "Lines like 'Goal:', 'Next:', 'Net:', 'Status:' followed by fragments",
+    "Comma-joined noun phrases with no verb",
+    "Microsoft and Mailchimp: keep 'that', 'who', 'the', 'then', 'to'; they show sentence structure to readers and translation tools",
+    "Microsoft: put verbs in short headings and labels when needed ('Access is denied', not 'Access denied')",
+    "STE: don't omit verbs, subjects, or articles to shorten text"
+   ],
+   "patterns": [
+    "(?:^|\\n)\\s*(?:Goal|Next|Net|Status|Recap|Result|Outcome|Done)\\s*:\\s",
+    "(?:^|[.!?]\\s+)Same\\s+\\w+,\\s+same\\s+\\w+"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Labels are fine in real structured output (a commit template, a table).",
+   "examples": [
+    {
+     "bad": "Same algorithm, same numbers within ±2%.",
+     "better": "The CUDA version uses the same algorithm as the Triton one, and its timings are within 2%.",
+     "note": ""
+    },
+    {
+     "bad": "Recap: goal is faster kernel on H200; verified clone reproduces within 2% locally. Next: tune knobs, lab-check.",
+     "better": "We're trying to make the kernel faster on the H200. I confirmed the CUDA version matches Triton within 2% on this machine. Next I'll tune its settings and test it on the H200.",
+     "note": ""
+    },
+    {
+     "bad": "Done: tests green, lint clean, PR up.",
+     "better": "All tests and lint checks pass. I opened PR #214.",
+     "note": ""
+    },
+    {
+     "bad": "Empty container.",
+     "better": "Empty the container.",
+     "note": "Human-identified: Microsoft Writing Style Guide, global writing tips: without 'the', it can read as a noun phrase."
+    },
+    {
+     "bad": "Inspect the database to verify all tables migrated.",
+     "better": "Inspect the database to verify that the migration copied every table.",
+     "note": "Human-identified: Adapted from the Microsoft Writing Style Guide: keep 'that'."
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; Microsoft Writing Style Guide; Google developer documentation style guide; Mailchimp Content Style Guide; ASD-STE100 Simplified Technical English (via Wikipedia)",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-12",
+   "category": "words",
+   "name": "Watch for clusters of AI-favored verbs and adjectives",
+   "severity": "warn",
+   "dont": "Two or more of these in one paragraph (avoid-ai-writing Tier 2): harness, navigate, foster, elevate, unleash, streamline, bolster, spearhead, resonate with, revolutionize, underpin, nuanced, crucial, vital, multifaceted, ecosystem (metaphor), myriad, plethora, encompass, catalyze, reimagine, galvanize, augment, cultivate, illuminate, elucidate, juxtapose, transformative, cornerstone, paramount, poised to, burgeoning, nascent, quintessential, overarching, quietly, garner, align with, highlight (verb), enhance, tailored, newfound.",
+   "do": "Keep one if it's the right word. Replace the rest with plain verbs (use, handle, support, improve, lead, simplify) or with the specific fact.",
+   "rationale": "Any one of these is normal English. Several together are a strong statistical tell, and they usually stand in for specifics.",
+   "detect": [
+    "Count listed words per paragraph; flag at 2 or more",
+    "'quietly' as an intensifier ('quietly became the standard') counts"
+   ],
+   "patterns": [
+    "\\b(?:harness(?:es|ed|ing)?|navigat(?:e|es|ed|ing)|foster(?:s|ed|ing)?|elevat(?:e|es|ed|ing)|unleash(?:es|ed|ing)?|streamlin(?:e|es|ed|ing)|bolster(?:s|ed|ing)?|spearhead(?:s|ed|ing)?|resonat(?:e|es|ed|ing)\\s+with|revolutioniz(?:e|es|ed|ing)|underpin(?:s|ned|ning|nings)?|nuanced|crucial(?:ly)?|vital|multifaceted|ecosystems?|myriad|plethora|encompass(?:es|ed|ing)?|catalyz(?:e|es|ed|ing)|reimagin(?:e|es|ed|ing)|galvaniz(?:e|es|ed|ing)|augment(?:s|ed|ing)?|cultivat(?:e|es|ed|ing)|illuminat(?:e|es|ed|ing)|elucidat(?:e|es|ed|ing)|juxtapos(?:e|es|ed|ing)|transformative|cornerstone|paramount|poised\\s+to|burgeoning|nascent|quintessential|overarching|quietly|garner(?:s|ed|ing)?|align(?:s|ed)?\\s+with|enhanc(?:e|es|ed|ing|ement)|tailored|newfound)\\b",
+    "\\bhighlight(?:s|ed|ing)\\s+(?:the|its|their|how|a|an)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 2,
+   "scope": "paragraph",
+   "exceptions": "Technical senses don't count: a software ecosystem you name, \"navigate to Settings\", image augmentation.",
+   "examples": [
+    {
+     "bad": "To harness this momentum, we must foster a culture that elevates quality and streamlines delivery.",
+     "better": "We should add a required review step and cut the release checklist from 14 items to 6.",
+     "note": ""
+    },
+    {
+     "bad": "The tool quietly became the cornerstone of a burgeoning ecosystem.",
+     "better": "About 400 open-source projects depend on the tool.",
+     "note": ""
+    },
+    {
+     "bad": "This nuanced, multifaceted approach aligns with our overarching goals.",
+     "better": "This approach meets the two goals we set in Q3: faster builds and fewer flaky tests.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon); Wikipedia: Signs of AI writing; Antislop (sam-paech)",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-13",
+   "category": "words",
+   "name": "Back up evaluative adjectives",
+   "severity": "warn",
+   "dont": "Heavy use of unsupported evaluation words (avoid-ai-writing Tier 3): significant(ly), innovative/innovation, effective(ly), dynamic(s), scalable/scalability, compelling, unprecedented, exceptional(ly), remarkable/remarkably, sophisticated, instrumental, plus stock phrases like \"the intersection of\", \"the integration of\", \"community-driven\", \"long-term sustainability\", \"user engagement\", \"emerging space\".",
+   "do": "Replace the adjective with the number, comparison, or mechanism that earns it. Keep the word only where the evidence sits next to it.",
+   "rationale": "These are ordinary words, so one use means nothing. At high density they signal claims without evidence.",
+   "detect": [
+    "Three or more hits in a short piece (or roughly 3% of words in a long one)",
+    "An evaluation word with no number or comparison in the same sentence"
+   ],
+   "patterns": [
+    "\\b(?:significant(?:ly)?|innovati(?:ve|on)|effective(?:ly)?|dynamics?|scalab(?:le|ility)|compelling|unprecedented|exceptional(?:ly)?|remarkab(?:le|ly)|sophisticated|instrumental)\\b",
+    "\\bthe\\s+(?:intersection|integration)\\s+of\\b|\\bcommunity-driven\\b|\\blong-term\\s+sustainability\\b|\\buser\\s+engagement\\b|\\bemerging\\s+(?:space|sector|category)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 3,
+   "scope": "text",
+   "exceptions": "\"Statistically significant\" with a p-value is fine.",
+   "examples": [
+    {
+     "bad": "This innovative, scalable platform delivers significant and compelling results at the intersection of AI and finance.",
+     "better": "The platform processes 40,000 loan applications a day and approves them 3x faster than our old system.",
+     "note": ""
+    },
+    {
+     "bad": "The team played an instrumental role in this remarkable, unprecedented growth.",
+     "better": "The team built the referral program, which brought in 38% of new users last year.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "WORD-14",
+   "category": "words",
+   "name": "Replace slogans with behavior",
+   "severity": "error",
+   "dont": "Dev-blog and launch-copy slogans: zero config, it just works, batteries included, blazing fast, lightning fast, developer-friendly, out of the box, effortless, frictionless, plug and play, next-generation, enterprise-grade, production-ready (unqualified).",
+   "do": "Name the concrete behavior: what the user does, how long it takes, what the number is.",
+   "rationale": "Slogans are claims the reader can't check. The specific behavior is shorter to verify and more convincing.",
+   "detect": [
+    "Any listed slogan without a measurement or concrete step next to it"
+   ],
+   "patterns": [
+    "\\b(?:zero[- ]config(?:uration)?|it\\s+just\\s+works|batteries[- ]included|blazing(?:ly)?[- ]fast|lightning[- ]fast|developer-friendly|out\\s+of\\s+the\\s+box|effortless(?:ly)?|frictionless|plug[- ]and[- ]play|next-gen(?:eration)?|enterprise-grade)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine when followed immediately by the proof (\"zero config: it reads your existing tsconfig\").",
+   "examples": [
+    {
+     "bad": "A blazing-fast, zero-config bundler that just works.",
+     "better": "The bundler reads your existing tsconfig and builds a 50,000-line app in 1.2 seconds.",
+     "note": ""
+    },
+    {
+     "bad": "Enterprise-grade security out of the box.",
+     "better": "Every request is encrypted with TLS 1.3, and SSO with Okta takes one setting.",
+     "note": ""
+    },
+    {
+     "bad": "Effortless, frictionless onboarding.",
+     "better": "New users can import their data from a CSV in one step.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "TPL-01",
+   "category": "templates",
+   "name": "State the point without a contrast setup",
+   "severity": "error",
+   "dont": "Negative parallelisms and reversals: \"It's not X, it's Y\", \"not just X but also Y\", \"X isn't the problem. Y is.\", \"The question isn't X. It's Y.\", \"Y rather than X\", and negative listing (\"Not a X. Not a Y. A Z.\").",
+   "do": "State Y directly. Mention X only if the reader actually believes X and needs correcting, and then name who believes it.",
+   "rationale": "The construction argues with a claim nobody made. It's one of the most recognized AI tells.",
+   "detect": [
+    "not/isn't X, (but/it's) Y",
+    "not only/just X but (also) Y",
+    "Y rather than X as a closing contrast",
+    "Two or more 'Not a...' fragments before the real noun",
+    "Negation chains: 'No X. No Y. Just Z.' or 'It didn't X. It didn't Y.'"
+   ],
+   "patterns": [
+    "\\bnot\\s+(?:just\\s+|only\\s+|merely\\s+)?[\\w-]+(?:\\s[\\w-]+){0,3},\\s+(?:but|it'?s|they'?re)\\b",
+    "\\bisn'?t\\s+(?:just\\s+)?(?:a|an|the)?\\s*[\\w-]+(?:\\s[\\w-]+){0,2}[,.;]\\s+(?:it'?s|but)\\b",
+    "\\b(?:isn'?t|wasn'?t)\\s+the\\s+(?:problem|point|issue|question|answer)\\.\\s+\\w+",
+    "\\bnot\\s+only\\b[^.]{1,80}\\bbut\\s+also\\b",
+    "(?:^|[.!?]\\s+)Not\\s+(?:a|an|because)\\b[^.]{0,60}\\.\\s+Not\\s",
+    ",?\\s+rather\\s+than\\s+(?:a|an|the|simply|just)\\b",
+    "(?:^|[.!?]\\s+)Rather\\s+than\\b",
+    "(?:^|[.!?]\\s+)No\\s+[\\w-]+(?:\\s[\\w-]+)?\\.\\s+No\\s+[\\w-]+(?:\\s[\\w-]+)?\\.",
+    "\\bnot\\s+[^.!?]{3,60}\\s+but\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine when correcting a misconception the user actually stated, or when the contrast is the requested comparison.",
+   "examples": [
+    {
+     "bad": "This isn't a bug, it's a contract.",
+     "better": "The function is documented to return null on a miss, so this is expected.",
+     "note": ""
+    },
+    {
+     "bad": "The bottleneck isn't the database. It's the serializer.",
+     "better": "The serializer is the bottleneck. It takes 80% of request time.",
+     "note": ""
+    },
+    {
+     "bad": "Not a framework. Not a library. A way of thinking.",
+     "better": "It's a set of conventions for naming and testing services.",
+     "note": ""
+    },
+    {
+     "bad": "Rather than simply retelling the legend, the film reimagines it for modern audiences.",
+     "better": "The film moves the legend to present-day Shanghai.",
+     "note": "Adapted from Wikipedia."
+    },
+    {
+     "bad": "No setup. No config. No headaches. Just results.",
+     "better": "It runs with the defaults in your package.json.",
+     "note": "Negation chain."
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); stop-slop (hardikpandya/stop-slop); no-ai-slop (realrossmanngroup); zonderlabs.com/slop + x.com/zhizdev thread; avoid-ai-writing (conorbronsdon); Antislop (sam-paech))",
+   "scan": "prose"
+  },
+  {
+   "id": "TPL-02",
+   "category": "templates",
+   "name": "Don't force lists of three",
+   "severity": "warn",
+   "dont": "Triplets added for rhythm: \"fast, reliable, and scalable\", \"clear, concise, and actionable\", three bullet points where two or four are real.",
+   "do": "Use the number of items you actually have. One strong item beats three padded ones.",
+   "rationale": "Three sounds complete, so LLMs pad to three. The third item is usually the weakest or a synonym of the first two.",
+   "detect": [
+    "Three adjectives or short phrases in a row with no evidence behind each",
+    "Every list in a reply has exactly three items",
+    "A colon introducing exactly three items",
+    "Flags only when three or more triplets appear in one text; a single list of three is normal"
+   ],
+   "patterns": [
+    "\\b(\\w+),\\s+(\\w+),\\s+and\\s+(\\w+)\\b(?=[^.]*\\.)",
+    ":\\s+[^.:;\\n]{2,40},\\s+[^.:;\\n]{2,40},\\s+and\\s+[^.:;\\n]{2,40}\\."
+   ],
+   "case_sensitive": false,
+   "min_matches": 3,
+   "scope": "text",
+   "exceptions": "Fine when there really are three things (three failing tests, three files).",
+   "examples": [
+    {
+     "bad": "The new API is fast, reliable, and scalable.",
+     "better": "The new API answers in under 50 ms at our peak load.",
+     "note": ""
+    },
+    {
+     "bad": "This approach is simpler, cleaner, and more maintainable.",
+     "better": "This approach removes the custom retry wrapper, which was 200 lines.",
+     "note": ""
+    },
+    {
+     "bad": "It preserves Nezha's image, weapons, and spirit while reshaping them through contemporary values, modern aesthetics, and digital animation.",
+     "better": "It keeps the original characters and moves the story to a modern setting.",
+     "note": "Adapted from Wikipedia."
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); stop-slop (hardikpandya/stop-slop); no-ai-slop (realrossmanngroup); avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "TPL-03",
+   "category": "templates",
+   "name": "No aphorisms or punchlines",
+   "severity": "error",
+   "dont": "Epigrams and manufactured profundity: numbered maxims, \"The gap is real but modest.\", \"That's it. That's the whole trick.\", \"Let that sink in.\", one-line paragraphs built for punch, every paragraph ending on a zinger.",
+   "do": "State the claim plainly in a complete sentence and move on.",
+   "rationale": "Aphorisms compress the claim until the reader has to decode it. The source mocks these as \"Claude Tzu\".",
+   "detect": [
+    "Short balanced or verbless lines that read like a proverb",
+    "'That's it.' / 'Full stop.' / 'Period.' / 'Let that sink in.'",
+    "One-sentence paragraphs used for drama"
+   ],
+   "patterns": [
+    "\\b(?:is|are)\\s+(?:real|the point)\\s+but\\s+\\w+\\b",
+    "(?:^|[.!?]\\s+)(?:That'?s it|Full stop|Period|Let that sink in|Make no mistake)\\b[.!]?",
+    "(?:^|\\n)\\s*\\d\\.\\s*\\n?\\s*The\\s+\\w+\\s+is\\s+a\\s+\\w+\\b",
+    "\\bThat'?s the (?:whole|entire)\\s+\\w+\\."
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "The same ruler on both sides, and the gap is real but modest.",
+     "better": "We used the same benchmark for AI and human writing. AI scored somewhat worse.",
+     "note": "\"Claude Tzu\" line from the source."
+    },
+    {
+     "bad": "Delete the cache. That's it. That's the whole fix.",
+     "better": "Deleting the stale cache fixes it.",
+     "note": ""
+    },
+    {
+     "bad": "Ship small. Ship often. Full stop.",
+     "better": "Smaller releases have caused fewer rollbacks for this team.",
+     "note": ""
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; stop-slop (hardikpandya/stop-slop); no-ai-slop (realrossmanngroup))",
+   "scan": "prose"
+  },
+  {
+   "id": "TPL-04",
+   "category": "templates",
+   "name": "Make the point instead of setting it up",
+   "severity": "error",
+   "dont": "Rhetorical setups: \"What if...?\" reframes, questions answered in the next sentence, \"Think about it:\", \"Here's what I mean:\", colon-then-reveal (\"The fix is simple:\"), pseudo-clefts (\"What makes this hard is...\").",
+   "do": "Say the point first, in the subject-verb order of a normal sentence.",
+   "rationale": "Setups delay the point and announce insight instead of delivering it.",
+   "detect": [
+    "A question followed immediately by its own answer",
+    "'What [makes/matters/is X] is ...' sentence openers",
+    "'is simple/clear/easy:' followed by the reveal",
+    "Two or more rhetorical questions in a row",
+    "Mailchimp/CDC: questions as subheads are fine if they match questions readers actually ask"
+   ],
+   "patterns": [
+    "\\?\\s+(?:The answer|It'?s|Because|Simple)\\b",
+    "(?:^|[.!?]\\s+)What\\s+(?:makes|matters|this\\s+means|I\\s+(?:found|mean))\\b[^.?]*\\bis\\b",
+    "\\b(?:is|was)\\s+(?:simple|easy|clear|obvious)\\s*:",
+    "(?:^|[.!?]\\s+)(?:Think about it|Here'?s what I mean|What if)\\b",
+    "\\?\\s+[A-Z][^.?!\\n]{3,80}\\?\\s"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Real questions to the user are fine. So is a question heading in an FAQ.",
+   "examples": [
+    {
+     "bad": "Why does this matter? Because the cache never expires.",
+     "better": "The cache has no expiry, so users see stale prices.",
+     "note": ""
+    },
+    {
+     "bad": "What makes this hard is the lack of tests.",
+     "better": "There are no tests for the payment module, so every change is risky.",
+     "note": ""
+    },
+    {
+     "bad": "The fix is simple: delete one line.",
+     "better": "Deleting line 42 fixes it.",
+     "note": ""
+    },
+    {
+     "bad": "What if we stopped thinking of errors as failures?",
+     "better": "Treat expected errors as return values instead of exceptions.",
+     "note": ""
+    },
+    {
+     "bad": "Why does this happen? What can we do about it? The answer is simple.",
+     "better": "It happens because the cache key ignores the locale. Add the locale to the key.",
+     "note": "Stacked questions."
+    }
+   ],
+   "source": "stop-slop (hardikpandya/stop-slop); no-ai-slop (realrossmanngroup); avoid-ai-writing (conorbronsdon); Federal Plain Language Guidelines (plainlanguage.gov / digital.gov)",
+   "scan": "prose"
+  },
+  {
+   "id": "TPL-05",
+   "category": "templates",
+   "name": "Drop trailing \"-ing\" commentary",
+   "severity": "error",
+   "dont": "A participle phrase tacked onto a fact to add significance: \"..., highlighting its importance\", \"..., ensuring reliability\", \"..., reflecting the team's commitment\", \"..., contributing to\".",
+   "do": "End the sentence after the fact. If the effect matters, state it as its own sentence with evidence.",
+   "rationale": "The tacked-on phrase is unsupported analysis. It usually claims an effect nobody measured.",
+   "detect": [
+    "Comma + highlighting/underscoring/emphasizing/ensuring/reflecting/symbolizing/showcasing/contributing to/fostering/cultivating/enhancing"
+   ],
+   "patterns": [
+    ",\\s+(?:highlighting|underscoring|emphasizing|ensuring|reflecting|symbolizing|showcasing|contributing\\s+to|fostering|cultivating|enhancing|demonstrating|solidifying|cementing|paving\\s+the\\s+way)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine when the participle states a real, checked consequence (\"..., causing the build to fail\").",
+   "examples": [
+    {
+     "bad": "I added input validation, ensuring robust and secure handling of user data.",
+     "better": "I added input validation. Requests with missing fields now get a 400.",
+     "note": ""
+    },
+    {
+     "bad": "The town has a population of 4,000, reflecting its enduring appeal.",
+     "better": "The town has a population of 4,000.",
+     "note": ""
+    },
+    {
+     "bad": "We moved to TypeScript, showcasing our commitment to code quality.",
+     "better": "We moved to TypeScript. The compiler caught 31 type errors during the move.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer)",
+   "scan": "prose"
+  },
+  {
+   "id": "TPL-06",
+   "category": "templates",
+   "name": "Don't inflate significance",
+   "severity": "error",
+   "dont": "Claims of importance without the specific thing: \"marks a pivotal moment\", \"a testament to\", \"plays a vital role\", \"sets the stage for\", \"represents a shift\", \"evolving landscape\", \"This matters because\", \"The implications are significant\", \"The stakes are high\".",
+   "do": "Name the specific consequence, or cut the sentence.",
+   "rationale": "Inflation replaces a fact with a generic claim that could apply to anything. Readers learn to skip it.",
+   "detect": [
+    "Significance words without a concrete consequence in the same sentence",
+    "Vague declaratives: implications/stakes/consequences + significant/high/real",
+    "Vague endorsement (worth reading, a must-read) without saying why"
+   ],
+   "patterns": [
+    "\\b(?:pivotal|key|crucial|vital|significant)\\s+(?:role|moment|turning\\s+point|step|milestone)\\b",
+    "\\b(?:is|stands\\s+as|serves\\s+as)\\s+a\\s+(?:testament|reminder)\\b",
+    "\\b(?:sets|setting)\\s+the\\s+stage\\b",
+    "\\b(?:marks|marking|represents|signals)\\s+a\\s+(?:shift|new\\s+era|turning\\s+point|milestone)\\b",
+    "\\bThe\\s+(?:implications|stakes|consequences|reasons)\\s+(?:are|is)\\s+(?:significant|high|real|structural|profound)\\b",
+    "(?:^|[.!?]\\s+)This\\s+(?:matters|is\\s+important)\\s+because\\b",
+    "\\bindelible\\s+mark\\b|\\bdeeply\\s+rooted\\b|\\bfocal\\s+point\\b",
+    "\\b(?:worth\\s+(?:reading|a\\s+read|your\\s+time|a\\s+look)|a\\s+must[- ]read)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine when a cited source makes the claim, attributed by name.",
+   "examples": [
+    {
+     "bad": "This migration marks a pivotal moment for the platform.",
+     "better": "Every service now uses the same auth library.",
+     "note": ""
+    },
+    {
+     "bad": "The 2019 census data serves as a testament to the town's enduring growth.",
+     "better": "The town grew from 3,100 people in 2009 to 4,000 in 2019.",
+     "note": ""
+    },
+    {
+     "bad": "The implications are significant.",
+     "better": "If the token leaks, anyone can read every customer's invoices.",
+     "note": ""
+    },
+    {
+     "bad": "This matters because users depend on it.",
+     "better": "About 2,000 users run this export every Monday.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); stop-slop (hardikpandya/stop-slop); avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "TPL-07",
+   "category": "templates",
+   "name": "No false ranges",
+   "severity": "warn",
+   "dont": "\"From X to Y\" where X and Y aren't ends of a real scale: \"from startups to enterprises\", \"from bug fixes to new features\", \"from the boardroom to the break room\".",
+   "do": "List the actual items, or give the real range with numbers.",
+   "rationale": "A false range suggests coverage of everything in between, which usually isn't true.",
+   "detect": [
+    "'from [noun] to [noun]' where the nouns are categories, not points on a scale"
+   ],
+   "patterns": [
+    "\\bfrom\\s+(?:[a-z]+\\s+){0,2}[a-z]+s?\\s+to\\s+(?:[a-z]+\\s+){0,2}[a-z]+s?\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Real ranges are fine (\"from 2019 to 2024\", \"from 10 ms to 40 ms\").",
+   "examples": [
+    {
+     "bad": "It's used by everyone from startups to Fortune 500 companies.",
+     "better": "About 300 companies use it, including Stripe and two of the five largest US banks.",
+     "note": ""
+    },
+    {
+     "bad": "The PR covers everything from bug fixes to new features.",
+     "better": "The PR fixes two bugs and adds CSV export.",
+     "note": ""
+    },
+    {
+     "bad": "This guide takes you from beginner to expert.",
+     "better": "This guide covers setup, the core API, and deployment.",
+     "note": ""
+    }
+   ],
+   "source": "Humanizer (blader/humanizer)",
+   "scan": "prose"
+  },
+  {
+   "id": "TPL-08",
+   "category": "templates",
+   "name": "End with a specific fact or next step",
+   "severity": "error",
+   "dont": "Formulaic endings: \"Despite these challenges, X continues to thrive\", \"The future looks bright\", \"Exciting times ahead\", \"In conclusion\", outline sections like \"Challenges and Future Outlook\".",
+   "do": "End on the last useful fact, the open question, or the concrete next step. Stop when you're done.",
+   "rationale": "Generic conclusions restate nothing specific and signal that the writer ran out of content.",
+   "detect": [
+    "'Despite (its/these) ... challenges'",
+    "'the future looks bright', 'exciting times', 'remains to be seen'",
+    "'In conclusion', 'Overall,' as the opener of a summary paragraph"
+   ],
+   "patterns": [
+    "\\bDespite\\s+(?:its|these|the|their)\\s+[^.]{0,40}challenges\\b",
+    "\\b(?:the\\s+future\\s+(?:looks|is)\\s+bright|exciting\\s+times|only\\s+time\\s+will\\s+tell|remains\\s+to\\s+be\\s+seen|continues\\s+to\\s+thrive)\\b",
+    "(?:^|\\n)\\s*(?:In\\s+conclusion|In\\s+summary|Overall),",
+    "\\bFuture\\s+(?:Outlook|Prospects)\\b|\\bChallenges\\s+and\\s+\\w+"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "Despite these challenges, the project continues to thrive.",
+     "better": "Two maintainers left in March. Releases slowed to one per quarter.",
+     "note": ""
+    },
+    {
+     "bad": "In conclusion, the migration was a success and the future looks bright.",
+     "better": "The migration finished with no downtime. Next, we'll remove the old tables on June 1.",
+     "note": ""
+    },
+    {
+     "bad": "Only time will tell whether the fix holds.",
+     "better": "I'll check the error rate tomorrow morning. If it's above 0.1%, I'll roll back.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer)",
+   "scan": "prose"
+  },
+  {
+   "id": "TPL-09",
+   "category": "templates",
+   "name": "No hooks or launch-copy openers",
+   "severity": "error",
+   "dont": "Attention hooks and ad copy: \"Imagine a world where...\", \"Picture this:\", \"The catch?\", \"Plot twist:\", \"Spoiler:\", \"Here's the kicker\", \"Meet X, your new favorite...\", \"But what does this mean for developers?\", \"N things you need to know\", \"This one is worth your time\".",
+   "do": "Open with the fact or the news. End with the last useful fact.",
+   "rationale": "Hooks promise a payoff the text then has to deliver, and in technical writing the reader already chose to read.",
+   "detect": [
+    "Sentence-initial hook phrase",
+    "Rhetorical question that introduces the next section"
+   ],
+   "patterns": [
+    "(?:^|[.!?]\\s+)(?:Imagine\\s+(?:a\\s+world|if)\\b|Picture\\s+this\\b|The\\s+catch\\?|Plot\\s+twist\\b|Spoiler(?:\\s+alert)?\\b|Here'?s\\s+the\\s+kicker\\b|Meet\\s+\\w+,)",
+    "\\bBut\\s+what\\s+does\\s+(?:this|that|it)\\s+(?:mean|look\\s+like)\\s+for\\b",
+    "\\b(?:is|are)\\s+worth\\s+(?:your\\s+time|a\\s+read|reading|a\\s+look)\\b",
+    "(?:^|\\n)\\s*(?:\\d+|Three|Four|Five|Seven|Ten)\\s+things\\s+(?:you\\s+need\\s+to|to)\\s+know\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "Imagine a world where deploys never fail. Meet Shipit, your new favorite CLI.",
+     "better": "Shipit is a CLI that rolls back a deploy automatically when health checks fail.",
+     "note": ""
+    },
+    {
+     "bad": "The catch? It only works on Linux.",
+     "better": "It only works on Linux.",
+     "note": ""
+    },
+    {
+     "bad": "But what does this mean for developers? Plot twist: you don't need to change anything.",
+     "better": "Existing code keeps working without changes.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon); stop-slop (hardikpandya/stop-slop); no-ai-slop (realrossmanngroup)",
+   "scan": "prose"
+  },
+  {
+   "id": "TPL-10",
+   "category": "templates",
+   "name": "No false concessions or invented crowds",
+   "severity": "error",
+   "dont": "Concessions that stage balance without content (\"While X is impressive, Y remains a challenge\"), and contrasts against an imagined lagging group (\"while everyone else was still debating\", \"unlike most tools\", \"most people don't realize\").",
+   "do": "State the specific limitation, or name the real competitor and the real difference.",
+   "rationale": "The concession and the crowd are both invented to make the claim feel earned.",
+   "detect": [
+    "'While X is/was [praise], Y remains/is still [problem]'",
+    "Contrast with 'everyone else', 'most people', 'most tools' with no source"
+   ],
+   "patterns": [
+    "(?:^|[.!?]\\s+)While\\s+[^.]{3,60}\\s+(?:is|are|was|were)\\s+(?:impressive|promising|exciting|powerful|useful|great|valuable)[^.]*,\\s+[^.]*\\b(?:remains?|still)\\b",
+    "\\b(?:while|as)\\s+everyone\\s+else\\b|\\bunlike\\s+most\\s+(?:tools|teams|companies|people|developers)\\b|\\bmost\\s+people\\s+(?:don'?t|do\\s+not)\\s+(?:realize|know)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Real comparisons with named alternatives are fine.",
+   "examples": [
+    {
+     "bad": "While the results are impressive, scalability remains a challenge.",
+     "better": "The service handles 1,000 requests per second. Above that, the queue backs up.",
+     "note": ""
+    },
+    {
+     "bad": "While everyone else was still debating, we shipped.",
+     "better": "We shipped in March, two months before the next comparable tool.",
+     "note": ""
+    },
+    {
+     "bad": "Unlike most tools, it respects your privacy.",
+     "better": "It stores nothing on our servers. Unlike Grammarly, it runs entirely offline.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-01",
+   "category": "filler",
+   "name": "Delete throat-clearing and announcements",
+   "severity": "error",
+   "dont": "Openers and labels that announce content instead of giving it: \"Here's the thing:\", \"Here's what I found\", \"The short version:\", \"Let me be clear\", \"It turns out\", \"Let me walk you through\", \"In this section, we'll\", \"Let's dive in\", \"Done:\".",
+   "do": "Start with the content itself.",
+   "rationale": "Announcements cost reading time and push the point further down. Pinker calls this metadiscourse: signposting the text instead of writing it.",
+   "detect": [
+    "A sentence or fragment that could be deleted with no loss",
+    "'Here's what/why/the' constructions"
+   ],
+   "patterns": [
+    "(?:^|\\n|[.!?]\\s+)(?:Here'?s\\s+(?:the\\s+(?:thing|key|catch|deal|kicker)|what|why|how)|What this (?:settles|means)|The short version|Bottom line|Key (?:insight|takeaway)|TL;DR|Short answer|Let me (?:be clear|explain|walk you through)|It turns out|The truth is|The reality is|Let'?s dive in|In this section)\\b",
+    "\\b(?:it'?s worth noting(?: that)?|it'?s important to note(?: that)?|needless to say|as we'?ll see)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "\"Here's the diff\" is fine when it introduces an attached artifact.",
+   "examples": [
+    {
+     "bad": "Here's the key insight: the cache is never invalidated.",
+     "better": "No code path invalidates the cache.",
+     "note": ""
+    },
+    {
+     "bad": "It's worth noting that the API also supports pagination.",
+     "better": "The API also supports pagination.",
+     "note": ""
+    },
+    {
+     "bad": "Let me walk you through what I found. It turns out the token expired.",
+     "better": "The token expired.",
+     "note": ""
+    },
+    {
+     "bad": "Let's dive in! There are three ways to configure this.",
+     "better": "You can configure this in the CLI, in config.toml, or with environment variables.",
+     "note": ""
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; stop-slop (hardikpandya/stop-slop); no-ai-slop (realrossmanngroup); Humanizer (blader/humanizer); Pinker, The Sense of Style (2014)",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-02",
+   "category": "filler",
+   "name": "No chatbot openers or sign-offs",
+   "severity": "error",
+   "dont": "Service-desk phrases: \"Certainly!\", \"Of course!\", \"Absolutely!\", \"I hope this helps!\", \"Let me know if you have any questions\", \"Would you like me to...?\", \"Is there anything else?\", \"Happy coding!\".",
+   "do": "Start with the answer. End when the content ends. Offer a next step only when it is specific and likely wanted.",
+   "rationale": "These phrases are the clearest marker of chatbot text and carry no content.",
+   "detect": [
+    "Exclamatory one-word openers",
+    "Closing offers or wishes"
+   ],
+   "patterns": [
+    "(?:^|\\n)\\s*(?:Certainly|Of course|Absolutely|Sure thing|Great|Happy to help)[!,.]",
+    "\\b(?:I\\s+hope\\s+(?:this|that)\\s+helps|let\\s+me\\s+know\\s+if\\s+(?:you\\s+have|there'?s|you\\s+need)|is\\s+there\\s+anything\\s+else|happy\\s+coding|feel\\s+free\\s+to)\\b",
+    "\\bWould\\s+you\\s+like\\s+me\\s+to\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "A specific offer is fine when the next step is real and the user would likely want it (\"Want me to open the PR?\").",
+   "examples": [
+    {
+     "bad": "Certainly! Here's the updated function.",
+     "better": "The updated function is below.",
+     "note": ""
+    },
+    {
+     "bad": "I hope this helps! Let me know if you have any other questions.",
+     "better": "(Delete.)",
+     "note": ""
+    },
+    {
+     "bad": "Would you like me to explain anything else or make further changes?",
+     "better": "I didn't touch the tests for the old endpoint. They'll fail until we delete them.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); no-ai-slop (realrossmanngroup)",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-03",
+   "category": "filler",
+   "name": "No flattery or validation",
+   "severity": "error",
+   "dont": "Praise and mind-reading aimed at the user: \"Great question!\", \"You're absolutely right!\", \"Excellent point\", \"I understand your concern\", \"I see where you're coming from\".",
+   "do": "Answer the question. If the user was right, say what you changed because of it.",
+   "rationale": "Flattery is filler, and agreeing too fast makes corrections less trustworthy.",
+   "detect": [
+    "Praise of the question or the user",
+    "Claims about the user's feelings"
+   ],
+   "patterns": [
+    "\\b(?:great|excellent|good|fantastic)\\s+(?:question|point|catch|idea)\\b",
+    "\\byou'?re\\s+(?:absolutely|totally|completely|so)\\s+right\\b",
+    "\\bI\\s+(?:understand|hear)\\s+your\\s+(?:concern|frustration)\\b",
+    "\\bI\\s+see\\s+where\\s+you'?re\\s+coming\\s+from\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "Great question! The difference is that let is block-scoped.",
+     "better": "let is block-scoped. var is function-scoped.",
+     "note": ""
+    },
+    {
+     "bad": "You're absolutely right, I made a mistake there.",
+     "better": "The off-by-one was mine. I changed < to <= on line 18.",
+     "note": ""
+    },
+    {
+     "bad": "I understand your concern about performance.",
+     "better": "The new query adds about 3 ms per request.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer)",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-04",
+   "category": "filler",
+   "name": "Hedge once, specifically",
+   "severity": "error",
+   "dont": "Stacked qualifiers and reflexive caution: \"could potentially possibly\", \"it may be worth considering\", \"it seems like it might\", \"generally speaking, in most cases\".",
+   "do": "Use one qualifier where real uncertainty exists, and say what it depends on. Otherwise state the claim.",
+   "rationale": "Stacked hedges hide how sure you are. One precise hedge tells the reader what to check. Pinker calls reflexive qualifiers ('somewhat', 'relatively', 'apparently') soggy apologies; keep a hedge only where you'd defend it.",
+   "detect": [
+    "Two or more hedge words in one clause",
+    "'may be worth', 'might want to consider'"
+   ],
+   "patterns": [
+    "\\b(?:could|might|may)\\s+(?:potentially|possibly|perhaps)\\b",
+    "\\b(?:it\\s+)?(?:may|might)\\s+be\\s+worth\\s+(?:considering|noting|exploring)\\b",
+    "\\b(?:might|may)\\s+want\\s+to\\s+consider\\b",
+    "\\b(?:seems|appears)\\s+(?:like\\s+it\\s+)?(?:might|may|could)\\b",
+    "\\bgenerally\\s+speaking\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Medical, legal, and financial content may need explicit caveats. Keep them specific. The opposite failure is also real: CDC CCI item 11 asks that real uncertainty be stated (see CLR-18).",
+   "examples": [
+    {
+     "bad": "This could potentially possibly cause issues in some edge cases.",
+     "better": "This fails when the input list is empty.",
+     "note": ""
+    },
+    {
+     "bad": "It may be worth considering adding an index.",
+     "better": "Add an index on orders.user_id. The query scans 2M rows without it.",
+     "note": ""
+    },
+    {
+     "bad": "It seems like it might be a race condition.",
+     "better": "It's probably a race condition: it fails only with 4+ workers. I haven't confirmed it yet.",
+     "note": ""
+    }
+   ],
+   "source": "Humanizer (blader/humanizer); Pinker, The Sense of Style (2014); CDC Clear Communication Index",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-05",
+   "category": "filler",
+   "name": "Name your sources",
+   "severity": "error",
+   "dont": "Vague authority and name-dropping: \"experts say\", \"studies show\", \"industry reports\", \"observers have noted\", \"some critics argue\", \"widely regarded\", \"has been featured in major outlets\".",
+   "do": "Name the source and what it said, or state the claim as your own with your evidence.",
+   "rationale": "Weasel attributions can't be checked, and LLMs often invent or inflate them.",
+   "detect": [
+    "Unnamed plural authorities",
+    "Lists of outlet types instead of a specific citation"
+   ],
+   "patterns": [
+    "\\b(?:experts|studies|researchers|observers|critics|analysts|industry\\s+reports?|many\\s+(?:people|developers|users))\\s+(?:say|show|suggest|argue|agree|believe|note|have\\s+(?:noted|cited))\\b",
+    "\\bwidely\\s+(?:regarded|considered|recognized|cited)\\b",
+    "\\b(?:featured|profiled|cited)\\s+in\\s+(?:major|national|leading|various)\\b",
+    "\\b(?:independent|significant|national|regional)\\s+(?:media\\s+)?coverage\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "Experts agree that microservices improve scalability.",
+     "better": "Both of our outages last quarter came from timeouts between services. For a team of three, I'd keep the monolith.",
+     "note": ""
+    },
+    {
+     "bad": "Studies show that code review reduces bugs.",
+     "better": "Bacchelli and Bird (Microsoft Research, 2013) found that most review comments were about code quality, not defects.",
+     "note": ""
+    },
+    {
+     "bad": "The library has been featured in major tech outlets.",
+     "better": "The library has 18,000 GitHub stars, and 1,200 npm packages depend on it.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer)",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-06",
+   "category": "filler",
+   "name": "Don't write gap-filling disclaimers",
+   "severity": "error",
+   "dont": "Disclaimers that point at missing information or tell the reader how to treat it: \"While specific details are limited\", \"not widely documented\", \"based on available information\", \"as of my last update\", \"should be treated as X rather than Y\", \"does not by itself establish\".",
+   "do": "Say what you checked and what you didn't find. If nothing useful remains, leave the topic out.",
+   "rationale": "These disclaimers are often speculative themselves and fill space where facts should be.",
+   "detect": [
+    "Limited/scarce/not publicly available framing",
+    "'should be treated/viewed/understood as' corrective framing",
+    "Speculative fill: 'likely began', 'is believed to have', 'maintains a low profile'"
+   ],
+   "patterns": [
+    "\\b(?:specific\\s+)?details\\s+(?:are|remain)\\s+(?:limited|scarce|unclear)\\b",
+    "\\bnot\\s+(?:widely|publicly|well)\\s+(?:documented|available|known|disclosed)\\b",
+    "\\b(?:based\\s+on|from)\\s+(?:the\\s+)?(?:available|provided)\\s+(?:information|sources|search\\s+results)\\b",
+    "\\bas\\s+of\\s+my\\s+(?:last|latest)\\s+(?:update|training)\\b",
+    "\\bshould\\s+be\\s+(?:treated|viewed|understood|read)\\s+as\\b",
+    "\\bdoes\\s+not\\s+(?:by\\s+itself\\s+)?establish\\b",
+    "\\b(?:is|are|was|were)\\s+believed\\s+to\\s+have\\b|\\blikely\\s+(?:began|started|originated|focuses|includes)\\b|\\bpresumably\\b|\\bmaintains?\\s+a\\s+low\\s+profile\\b|\\bkeeps?\\s+(?:personal\\s+)?details\\s+private\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine to say plainly that you couldn't verify something the user asked about. Distinguish from CLR-18: say what is known and unknown with a source, but don't add generic disclaimers.",
+   "examples": [
+    {
+     "bad": "While specific details are limited, the company likely focuses on enterprise clients.",
+     "better": "I couldn't find the company's customer list. Its site and LinkedIn page don't name any clients.",
+     "note": ""
+    },
+    {
+     "bad": "Based on available information, the function appears to be deprecated.",
+     "better": "The changelog for v3.2 marks this function as deprecated.",
+     "note": ""
+    },
+    {
+     "bad": "This benchmark should be treated as indicative rather than definitive.",
+     "better": "This benchmark ran on one machine with one dataset. Results on your hardware may differ.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-07",
+   "category": "filler",
+   "name": "Cut wordy filler phrases",
+   "severity": "warn",
+   "dont": "Padding: in order to, due to the fact that, at this point in time, in the event that, for the purpose of, when it comes to, at its core, in today's [X], in a world where, the fact that, a number of. Also Zinsser's clutter: 'personal friend', 'at the present time', 'I might add', 'it is interesting to note'; and Microsoft's openers 'you can' and 'there is/are' when they only delay the verb.",
+   "do": "Use the short form: to, because, now, if, for, about, many.",
+   "rationale": "Each phrase adds words and no meaning.",
+   "detect": [
+    "Any listed phrase"
+   ],
+   "patterns": [
+    "\\b(?:in\\s+order\\s+to|due\\s+to\\s+the\\s+fact\\s+that|at\\s+this\\s+point\\s+in\\s+time|in\\s+the\\s+event\\s+that|for\\s+the\\s+purpose\\s+of|when\\s+it\\s+comes\\s+to|at\\s+its\\s+core|in\\s+today'?s\\s+\\w+|in\\s+a\\s+world\\s+where|a\\s+(?:large\\s+)?number\\s+of|on\\s+a\\s+(?:daily|regular)\\s+basis|with\\s+regard\\s+to)\\b",
+    "\\b(?:currently\\s+)?in\\s+the\\s+process\\s+of\\b",
+    "\\bis\\s+intended\\s+(?:only\\s+)?to\\b|\\bcontained\\s+(?:herein|elsewhere|therein)\\b",
+    "\\b(?:(?:a|my|her|his|their)\\s+personal\\s+(?:friend|physician|doctor)|I\\s+might\\s+add|it\\s+is\\s+interesting\\s+to\\s+note|at\\s+the\\s+present\\s+time)\\b",
+    "(?:^|[.!?]\\s+)There\\s+(?:is|are|was|were)\\s+[^.!?]{1,50}\\b(?:that|who|which)\\s+\\w+"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "In order to run the tests, you'll need Docker.",
+     "better": "To run the tests, you need Docker.",
+     "note": ""
+    },
+    {
+     "bad": "Due to the fact that the API is rate-limited, requests fail at this point in time.",
+     "better": "Requests fail now because the API is rate-limited.",
+     "note": ""
+    },
+    {
+     "bad": "When it comes to caching, at its core the issue is invalidation.",
+     "better": "Cache invalidation is the hard part.",
+     "note": ""
+    },
+    {
+     "bad": "We are currently in the process of consolidating our product range.",
+     "better": "We're selling fewer products.",
+     "note": "Human-identified: Plain English Campaign Golden Bull, 2003 (jungle.com). Rewrite is ours."
+    },
+    {
+     "bad": "The following summary is intended only to highlight certain information contained elsewhere in this Prospectus.",
+     "better": "This summary highlights some information from this Prospectus.",
+     "note": "Human-identified: SEC Plain English Handbook."
+    },
+    {
+     "bad": "You can access Office apps across your devices, and you get online file storage and sharing.",
+     "better": "Store files online, access them from all your devices, and share them with coworkers.",
+     "note": "Human-identified: Microsoft Writing Style Guide, top 10 tips."
+    },
+    {
+     "bad": "There are many users who skip the setup step.",
+     "better": "Many users skip the setup step.",
+     "note": ""
+    }
+   ],
+   "source": "Humanizer (blader/humanizer); stop-slop (hardikpandya/stop-slop); Plain English Campaign; 18F content guide; SEC Plain English Handbook (1998); Zinsser, On Writing Well (via LitCharts); Microsoft Writing Style Guide; Garner, LawProse Lesson 287",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-08",
+   "category": "filler",
+   "name": "No sweeping absolutes",
+   "severity": "warn",
+   "dont": "Lazy extremes: always, never, every, everyone, nobody, all, completely, entirely, used as emphasis rather than measured fact.",
+   "do": "Give the actual scope or number.",
+   "rationale": "Absolutes are usually false, and readers stop trusting the claim when they find one exception.",
+   "detect": [
+    "always/never/every/everyone/nobody in a claim with no count behind it"
+   ],
+   "patterns": [
+    "\\b(?:always|never|everyone|everybody|nobody|no\\s+one)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine when literally true and checked (\"the job never ran: the cron entry is commented out\").",
+   "examples": [
+    {
+     "bad": "Everyone uses this pattern.",
+     "better": "Most of the repos in this org use this pattern: 41 of 50.",
+     "note": ""
+    },
+    {
+     "bad": "This never works on Windows.",
+     "better": "This fails on Windows because the path uses forward slashes.",
+     "note": ""
+    },
+    {
+     "bad": "Nobody reads the docs.",
+     "better": "Docs page views dropped 60% after we added in-app help.",
+     "note": ""
+    }
+   ],
+   "source": "stop-slop (hardikpandya/stop-slop)",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-09",
+   "category": "filler",
+   "name": "Don't tell the reader how to feel about a fact",
+   "severity": "error",
+   "dont": "Steering cues and performed insight: Notably, Interestingly, Surprisingly, Importantly, Crucially, \"Here's what's interesting\", \"the key point\", \"the contrarian take\", \"sit with that for a moment\", \"worth naming\", \"I want to be upfront\", \"To be honest\", \"Honestly?\", \"What surprised me most\", \"I can't stop thinking about\".",
+   "do": "State the fact and let it carry its own weight. If something is surprising, show what was expected and what happened.",
+   "rationale": "Steering cues pre-interpret the content. When the fact is strong they're redundant, and when it's weak they're false.",
+   "detect": [
+    "Sentence-initial calibration adverb + comma",
+    "Labels that grade the writer's own point (key, contrarian, important)",
+    "Announcing candor instead of being candid"
+   ],
+   "patterns": [
+    "(?:^|[.!?]\\s+)(?:Notably|Interestingly|Surprisingly|Importantly|Crucially|Tellingly|Strikingly|Remarkably),",
+    "\\b(?:here'?s\\s+what'?s\\s+(?:interesting|surprising|wild)|what\\s+surprised\\s+me\\s+(?:most|the\\s+most)|sit\\s+with\\s+that|worth\\s+naming|I\\s+want\\s+to\\s+be\\s+(?:upfront|transparent|clear)|to\\s+be\\s+(?:honest|transparent|fair)|honestly\\?|I\\s+can'?t\\s+stop\\s+thinking\\s+about|the\\s+(?:contrarian|key|uncomfortable)\\s+(?:take|point|truth))\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "Interestingly, the bug only appears on Tuesdays.",
+     "better": "The bug appears only on Tuesdays, when the weekly report job runs.",
+     "note": ""
+    },
+    {
+     "bad": "I want to be upfront: I haven't tested this on Windows.",
+     "better": "I haven't tested this on Windows.",
+     "note": ""
+    },
+    {
+     "bad": "Here's what's surprising: the old version was faster.",
+     "better": "I expected the rewrite to be faster, but the old version runs in 80 ms and the new one in 120 ms.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon); stop-slop (hardikpandya/stop-slop)",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-10",
+   "category": "filler",
+   "name": "Don't restate the request",
+   "severity": "error",
+   "dont": "Openers that echo the user's question or praise their work before answering: \"You're asking about X.\", \"So you want to...\", \"Great work on the PR! You've added X and Y...\", \"Let me make sure I understand...\" when nothing is ambiguous.",
+   "do": "Start with the answer. Restate the request only when it's ambiguous, and then say which reading you chose.",
+   "rationale": "Echoing the prompt adds a paragraph of nothing and delays the answer.",
+   "detect": [
+    "First sentence paraphrases the user's message",
+    "Opening praise that summarizes the user's own work back to them"
+   ],
+   "patterns": [
+    "^(?:Great|Nice|Excellent|Awesome)\\s+(?:work|job)\\b[^.!]*[.!]\\s+You'?ve\\b",
+    "^(?:You'?re\\s+asking|So\\s+you\\s+(?:want|need|are\\s+asking)|It\\s+sounds\\s+like\\s+you|If\\s+I\\s+understand\\s+correctly|Let\\s+me\\s+make\\s+sure\\s+I\\s+understand)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Restating is fine when the request is ambiguous; name the interpretation in one clause.",
+   "examples": [
+    {
+     "bad": "You're asking how to make the build faster. Build speed is an important topic. The main option is caching.",
+     "better": "Turn on Turborepo's remote cache. It skips unchanged packages.",
+     "note": ""
+    },
+    {
+     "bad": "So you want to rename the column without downtime. Great question! Here's how.",
+     "better": "Add the new column, write to both, backfill, switch reads, then drop the old column.",
+     "note": ""
+    },
+    {
+     "bad": "Great work on this PR! You've added retries, refactored the client, and updated the docs.",
+     "better": "Two issues before merge: the retry loop has no cap, and the docs still show the old flag name.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "FILL-11",
+   "category": "filler",
+   "name": "Drop scaffolding transitions",
+   "severity": "warn",
+   "dont": "Essay connectors that add no logic: Moreover, Furthermore, Additionally, In addition, Thus, Hence, That said, On the other hand (with no first hand), As previously mentioned, As noted above, In terms of, and \"Let's\" + verb as a transition (\"Let's look at\", \"Let's explore\").",
+   "do": "Let sentence order carry the connection. Use \"also\", \"so\", or \"but\" when you need a connector.",
+   "rationale": "Formal connectors make prose sound like a school essay, and antislop measured several of them as heavily over-used by LLMs.",
+   "detect": [
+    "Sentence-initial formal connector",
+    "'Let's' + verb that introduces the next section"
+   ],
+   "patterns": [
+    "(?:^|[.!?]\\s+)(?:Moreover|Furthermore|In\\s+addition|Thus|Hence|That\\s+said|As\\s+(?:previously\\s+mentioned|noted\\s+above|mentioned\\s+earlier)),",
+    "\\bin\\s+terms\\s+of\\b",
+    "(?:^|[.!?]\\s+)Let'?s\\s+(?:look\\s+at|explore|take\\s+a\\s+(?:look|closer\\s+look)|examine|break\\s+(?:this|it)\\s+down|unpack)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "\"Thus\" is fine in math proofs.",
+   "examples": [
+    {
+     "bad": "Moreover, the API is rate-limited. Furthermore, it lacks pagination.",
+     "better": "The API is also rate-limited, and it has no pagination.",
+     "note": ""
+    },
+    {
+     "bad": "Let's take a closer look at the error.",
+     "better": "The error comes from line 88, where config is undefined.",
+     "note": ""
+    },
+    {
+     "bad": "In terms of performance, the new query is better.",
+     "better": "The new query is 4x faster.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon); Antislop (sam-paech)",
+   "scan": "prose"
+  },
+  {
+   "id": "ORD-01",
+   "category": "order",
+   "name": "Lead with the point",
+   "severity": "error",
+   "dont": "Long front-loaded clauses, background, or process narration before the answer: \"After looking through the codebase and weighing options, the cleanest path seems to be...\".",
+   "do": "Put the answer, result, or decision in the first sentence. Reasons come after.",
+   "rationale": "The reader decides from the first sentence whether to keep reading. A buried point takes several readings to find. The U.S. Army's BLUF standard puts the main point first. In Kimble's survey of 251 Michigan lawyers, an opening summary was a top reason 61% preferred the plain-language judicial opinion. HHS found that many readers with limited literacy read only the first few words of a page or paragraph before deciding whether to continue.",
+   "detect": [
+    "First sentence opens with a long subordinate clause (After, Since, Given, Having, Based on)",
+    "The requested result appears after the first comma-heavy clause",
+    "CDC Clear Communication Index items 1-2: one main message (1-3 short sentences) in the first paragraph or section, visible without scrolling on the web",
+    "Simply Put: restate the main message at the end with the action"
+   ],
+   "patterns": [
+    "^[^.\\n]{40,},\\s+so\\s+I'?ll\\b",
+    "(?:^|\\n)(?:After|Having|Based on|Looking at|Given|Since|Because|Now that|With)\\b[^.\\n]{50,}"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "Nothing else depends on anything but the result, so I'll report as soon as the poll returns.",
+     "better": "I'll report the result when the poll finishes.",
+     "note": "Source example."
+    },
+    {
+     "bad": "After looking through the codebase and weighing a few options, the cleanest path seems to be adding a flag to the existing handler.",
+     "better": "Add a flag to the existing handler. It's the smallest change, and nothing else calls that handler.",
+     "note": ""
+    },
+    {
+     "bad": "Given that the tests were flaky before and the CI runner has been slow this week, it's likely the failure isn't from your change.",
+     "better": "Your change probably didn't cause this failure. The test was flaky before your PR.",
+     "note": ""
+    },
+    {
+     "bad": "Blood pressure is the force of blood pushing against the walls of your arteries. It's important to get it checked often.",
+     "better": "Check your blood pressure every 2 years, especially if you are age 40 or older.",
+     "note": "Human-identified: HHS Health Literacy Online, section 2.3."
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; Army Regulation 25-50 (BLUF); Nielsen & Morkes, NN/g (1997); Kimble, Writing for Dollars, Writing to Please (2012); CDC Clear Communication Index; HHS Health Literacy Online (2016); CDC Simply Put",
+   "scan": "prose"
+  },
+  {
+   "id": "ORD-02",
+   "category": "order",
+   "name": "One main point per sentence",
+   "severity": "warn",
+   "dont": "Sentences that carry several claims joined by semicolons, parentheses, and \"since\" clauses. Also any sentence over about 25 words (GOV.UK's split point), and an average above about 20.",
+   "do": "Split them. Aim for under about 25 words, one claim each.",
+   "rationale": "Packing a number, a cause, a constraint, and a plan into one sentence makes the reader hold all of them at once.",
+   "detect": [
+    "More than ~30 words",
+    "A semicolon and a parenthetical in the same sentence",
+    "Three or more numbers in one sentence",
+    "Sentences over ~25 words (GOV.UK); averages above ~20. In Kimble's and Flammer's studies, plain versions that readers preferred averaged 18 to 19 words.",
+    "Federal guidelines: express only one idea in each sentence",
+    "Sentence-length targets by source: Simply Put 8-10 words; Flesch about 15 (conversational) to 20 (plain); HHS and usability.gov 20 or fewer; STE 20 for instructions, 25 for descriptions; GOV.UK and Mailchimp 25 or fewer",
+    "Microsoft: don't join more than three clauses with and, or, or but; preferably two",
+    "Semicolons are fine used sparingly: at most one per sentence, joining two closely related independent clauses. Don't chain clauses with them (Mailchimp avoids them entirely; owner decision: allow sparingly).",
+    "Several commas plus end punctuation usually signal a sentence to split (Microsoft)"
+   ],
+   "patterns": [
+    "[^.!?\\n]*\\([^)]*\\)[^.!?\\n]*;[^.!?\\n]*",
+    "[^.!?\\n]*;[^.!?\\n]*\\([^)]*\\)[^.!?\\n]*",
+    "(?:\\b\\w+\\b[^\\w.!?\\n]+){34,}\\b\\w+\\b[.!?]",
+    "[^.!?\\n]*;[^.!?\\n]*;[^.!?\\n]*[.!?]"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Long sentences are fine when they're a simple list.",
+   "examples": [
+    {
+     "bad": "The one remaining warm-regime gap (o: 12.3 vs 7.9 µs) is purely stage depth, since the 10-stage instantiation exceeds this GPU's 101,376-byte limit by 1 KB; 8 or 9 stages will close it.",
+     "better": "One kernel is still slower: o takes 12.3 µs vs. 7.9 µs. The cause is pipeline depth. Ten stages need 1 KB more shared memory than this GPU has, so I'll try 8 or 9.",
+     "note": "From the source's Claude Code sample."
+    },
+    {
+     "bad": "I fixed the import (it was pointing at the old path); the test still fails but now on an assertion (expected 3, got 2), which suggests the off-by-one is real.",
+     "better": "I fixed the broken import. The test still fails, but now on an assertion: it expected 3 and got 2. So the off-by-one bug is real.",
+     "note": ""
+    },
+    {
+     "bad": "(An 81-word opening sentence on a deferred-action form.)",
+     "better": "Split it into one sentence per requirement, and put the required action first.",
+     "note": "Human-identified: Center for Plain Language WonderMark award (Department of Homeland Security form). Described, not quoted."
+    },
+    {
+     "bad": "The proposal is presented to an employer who agrees to negotiate an individualized job that meets the employment needs of the applicant and real business needs of the employer.",
+     "better": "We prepare a preliminary proposal to present to an employer who agrees to negotiate a job that meets both his and your employment needs.",
+     "note": "Human-identified: Federal Plain Language Guidelines, 'Write short sentences.' The guideline also puts 'you' and 'we' in place of 'the applicant' and passives."
+    },
+    {
+     "bad": "(A 630-word single sentence in a council footpath-diversion notice, describing the route in metres from building corners.)",
+     "better": "Describe the route in short steps, or show it on a map.",
+     "note": "Human-identified: Plain English Campaign Golden Bull, 2005 (Halton Borough Council). Described, not quoted."
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread; GOV.UK style guide; Federal Plain Language Guidelines (plainlanguage.gov / digital.gov); Microsoft Writing Style Guide; Kimble (2012); HHS Health Literacy Online (2016); CDC Simply Put; Research-Based Web Design & Usability Guidelines (usability.gov), ch. 15; Mailchimp Content Style Guide; ASD-STE100 Simplified Technical English (via Wikipedia); Flesch, How to Write Plain English; Federal Plain Language Guidelines (2011), via plainlanguage.gov archive; Plain English Campaign examples",
+   "scan": "prose"
+  },
+  {
+   "id": "ORD-03",
+   "category": "order",
+   "name": "Put emphasis where the importance is",
+   "severity": "error",
+   "dont": "Bad news in a trailing clause or labeled as an aside (\"One negative finding:\", \"Minor note:\"), and trivia in the headline.",
+   "do": "Lead with what the user must act on, including failures, crashes, and caveats.",
+   "rationale": "Once the emphasis is right, the rest becomes a style choice. When it's wrong, the reader misses the one thing that mattered.",
+   "detect": [
+    "Negative results introduced as an aside",
+    "A crash, data loss, or failing test mentioned after routine details"
+   ],
+   "patterns": [
+    "\\b(?:one\\s+negative\\s+finding|one\\s+caveat|minor\\s+note|small\\s+caveat|as\\s+a\\s+side\\s+note|one\\s+thing\\s+to\\s+flag)\\b",
+    "\\b(?:and|but)\\s+(?:also\\s+)?crashed\\s+once\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "One negative finding: cp.async with an L2 evict-first hint is harmful on sm_120 (turns warm into cold) and crashed once, so it is out.",
+     "better": "Don't use cp.async with the L2 evict-first hint on sm_120. It made repeated runs as slow as first runs, and it crashed once. I removed it.",
+     "note": "From the source's Claude Code sample."
+    },
+    {
+     "bad": "Refactored the helpers and updated the docs. Minor note: two tests are now failing.",
+     "better": "Two tests now fail after my refactor. I'm fixing them. I also updated the docs.",
+     "note": ""
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread",
+   "scan": "prose"
+  },
+  {
+   "id": "ORD-04",
+   "category": "order",
+   "name": "Say what you checked",
+   "severity": "warn",
+   "dont": "Bare completion claims: \"Done.\", \"Verified.\", \"Works now.\", \"Should be fine.\", \"All good.\"",
+   "do": "Say what you did and what you observed, and what you didn't check.",
+   "rationale": "\"Verified\" without the check is an empty statement. The reader can't tell how much to trust it.",
+   "detect": [
+    "done/verified/confirmed/works/settled with no description of the check",
+    "'should' claims about untested behavior presented as results"
+   ],
+   "patterns": [
+    "(?:^|[.!?]\\s+)(?:Done|Verified|Confirmed|Settled|Fixed|All good)\\b[.:!]",
+    "\\b(?:works|is working|looks good|should be fine)(?:\\s+now)?\\s*[.!]"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "Done: the Triton code is read, and the CUDA clone reproduces it.",
+     "better": "I read the Triton kernel and ported it to CUDA. On this GPU, the CUDA version's timings are within 2% of Triton's.",
+     "note": "From the source's Claude Code sample."
+    },
+    {
+     "bad": "Verified, everything works.",
+     "better": "I ran the test suite (all 118 pass) and loaded the settings page. The new toggle saves correctly.",
+     "note": ""
+    },
+    {
+     "bad": "Should be fine now.",
+     "better": "I restarted the worker, and the queue has drained. I haven't checked the overnight job yet.",
+     "note": ""
+    }
+   ],
+   "source": "zonderlabs.com/slop + x.com/zhizdev thread",
+   "scan": "prose"
+  },
+  {
+   "id": "ORD-05",
+   "category": "order",
+   "name": "Vary sentence rhythm",
+   "severity": "warn",
+   "dont": "Metronomic prose: every sentence the same length, stacks of short punchy fragments, or every paragraph ending on a one-liner.",
+   "do": "Mix short and long sentences the way the content needs. Use complete sentences.",
+   "rationale": "Uniform rhythm is a strong tell (Wikipedia notes a mid-2026 trend toward a strict 8 to 20 word band), and staccato fragments read as manufactured drama.",
+   "detect": [
+    "Five or more consecutive sentences within a few words of the same length",
+    "Three or more fragments under five words in a row",
+    "Three or more consecutive sentences starting with the same word"
+   ],
+   "patterns": [
+    "(?:\\b[A-Z][^.!?\\n]{1,25}[.!?]\\s+){3,}[A-Z]",
+    "(?:^|[.!?]\\s+)(\\w+)\\b[^.!?]*[.!?]\\s+\\1\\b[^.!?]*[.!?]\\s+\\1\\b"
+   ],
+   "case_sensitive": true,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fragments are fine in UI labels, commit subjects, and lists. Starting a sentence with And or But is fine (Flesch).",
+   "examples": [
+    {
+     "bad": "It's fast. It's simple. It works. Ship it.",
+     "better": "It's fast and simple, and it passed every test, so I'd ship it.",
+     "note": ""
+    },
+    {
+     "bad": "The build failed. I checked the logs. The cache was stale. I cleared it. The build passed.",
+     "better": "The build failed because the cache was stale. After I cleared it, the build passed.",
+     "note": ""
+    },
+    {
+     "bad": "It reads the file. It parses the rows. It writes the output.",
+     "better": "It reads the file, parses each row, and writes the output to out.csv.",
+     "note": "Same-opener run."
+    }
+   ],
+   "source": "stop-slop (hardikpandya/stop-slop); no-ai-slop (realrossmanngroup); Humanizer (blader/humanizer); Wikipedia: Signs of AI writing; avoid-ai-writing (conorbronsdon); Flesch, How to Write Plain English",
+   "scan": "prose"
+  },
+  {
+   "id": "ORD-06",
+   "category": "order",
+   "name": "Describe what is, not what changed",
+   "severity": "warn",
+   "dont": "Docs and code comments that narrate the edit: \"now uses\", \"replaces the previous approach\", \"we changed X to Y\", \"updated to support\", \"no longer\", \"(new)\", \"refactored to\".",
+   "do": "Describe current behavior as if it had always been this way. Put history in the commit message or changelog.",
+   "rationale": "A reader of the docs next year has no idea what \"now\" or \"previous\" refers to. The diff belongs in version control.",
+   "detect": [
+    "'now' + verb in documentation or a code comment (not in chat status reports)",
+    "References to a previous or old approach outside a changelog"
+   ],
+   "patterns": [
+    "\\b(?:replaces?\\s+the\\s+(?:previous|old|former)|no\\s+longer\\s+(?:uses|needs|requires|supports)|(?:was|has\\s+been)\\s+(?:refactored|updated|changed)\\s+to|instead\\s+of\\s+the\\s+(?:old|previous))\\b",
+    "//\\s*(?:NEW|UPDATED|CHANGED|FIXED)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Changelogs, migration guides, release notes, commit messages, and chat replies reporting what you just did are about change and are exempt.",
+   "examples": [
+    {
+     "bad": "// Now uses a Map instead of the old array lookup for speed.",
+     "better": "// Map lookup keeps this O(1) on large inputs.",
+     "note": ""
+    },
+    {
+     "bad": "The config loader replaces the previous YAML approach and now reads TOML.",
+     "better": "The config loader reads TOML from ./config.toml.",
+     "note": ""
+    },
+    {
+     "bad": "This function was refactored to support pagination.",
+     "better": "This function returns results one page at a time. Pass a cursor to get the next page.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "ORD-07",
+   "category": "order",
+   "name": "Make every paragraph add something",
+   "severity": "warn",
+   "dont": "Paragraphs that restate the premise (the treadmill), paragraphs that could swap places without loss, and jumps between paragraphs with no connecting idea.",
+   "do": "Give each paragraph one new fact, claim, or step, and order them so each depends on the one before.",
+   "rationale": "If paragraphs can be reshuffled freely, the piece is a list of points, not an argument.",
+   "detect": [
+    "A paragraph whose main claim already appeared earlier",
+    "Two body paragraphs that read the same in either order",
+    "A topic change with no bridge sentence"
+   ],
+   "patterns": [],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "text",
+   "exceptions": "Reference material and FAQs are meant to be read out of order.",
+   "examples": [
+    {
+     "bad": "Caching is important for performance. [...] As mentioned, caching improves speed. [...] In short, caching makes things faster.",
+     "better": "Caching cut p95 latency from 900 ms to 200 ms. The risk is stale data, so entries expire after 60 seconds.",
+     "note": "Treadmill."
+    },
+    {
+     "bad": "Paragraph 1: Our API is fast. Paragraph 2: Our API is secure. Paragraph 3: Our API is easy.",
+     "better": "The API is fast because responses come from an edge cache, and caching only public data keeps it secure.",
+     "note": "Reshuffle test."
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-01",
+   "category": "format",
+   "name": "Use em dashes exceedingly sparingly",
+   "severity": "warn",
+   "dont": "More than one em dash in a reply or short document; em dashes for dramatic reveals, asides that should be their own sentence, or paired dashes around a clause; spaced hyphens or double hyphens standing in for dashes.",
+   "do": "Default to a comma, parentheses, a colon, or a period. Keep at most one em dash in a piece, and only where no other punctuation works as well (for example, an inline definition: 'vomiting—throwing up—').",
+   "rationale": "Em-dash density is one of the most recognized AI tells, and dash asides usually hide a second sentence. Style guides allow em dashes (Mailchimp, Microsoft, HHS), so the rule limits rather than bans them.",
+   "detect": [
+    "Two or more em dashes in one reply or short document",
+    "Any em dash introducing a punchline or reveal",
+    "' - ' or '--' used as a dash"
+   ],
+   "patterns": [
+    "—",
+    "[ \\t]--[ \\t]",
+    "\\w[ \\t]-[ \\t]\\w"
+   ],
+   "case_sensitive": false,
+   "min_matches": 2,
+   "scope": "text",
+   "exceptions": "Quoted text and code are exempt. Use an en dash (–) for numeric ranges. One em dash for an inline definition or a sharp break is acceptable.",
+   "examples": [
+    {
+     "bad": "The fix is small — just one line — but it matters.",
+     "better": "The fix is one line.",
+     "note": ""
+    },
+    {
+     "bad": "We tried three approaches — caching, batching, and indexing — and only indexing helped.",
+     "better": "We tried caching, batching, and indexing. Only indexing helped.",
+     "note": ""
+    },
+    {
+     "bad": "The result was clear — the old version was faster.",
+     "better": "The old version was faster.",
+     "note": ""
+    }
+   ],
+   "source": "stop-slop (hardikpandya/stop-slop); Humanizer (blader/humanizer); no-ai-slop (realrossmanngroup); Owner decision (style review, Nov 2026)",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-02",
+   "category": "format",
+   "name": "Emphasize sparingly: no bold sprawl, no ALL CAPS prose",
+   "severity": "warn",
+   "dont": "Bold on ordinary words, on every key term, or on several phrases per paragraph. Also prose in ALL CAPS, and combining bold, italics, caps, and underline.",
+   "do": "Use plain text. Bold at most one warning or decision the reader must not miss.",
+   "rationale": "When everything is bold, nothing stands out, and the page reads like an ad. usability.gov 15:6 and Simply Put: all caps slows reading of running text.",
+   "detect": [
+    "More than one bold span per paragraph",
+    "Bold on a term that isn't a warning, a UI label, or a defined term"
+   ],
+   "patterns": [
+    "(?:\\*\\*[^*\\n]+\\*\\*[^\\n]*){2,}",
+    "\\b[A-Z]{2,}(?:\\s+[A-Z]{2,}){3,}\\b"
+   ],
+   "case_sensitive": true,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "UI labels the user must click can be bold (\"Click **Save**\").",
+   "examples": [
+    {
+     "bad": "This is a **critical** step that **significantly** improves **performance**.",
+     "better": "This step cuts load time from 3 s to 1 s.",
+     "note": ""
+    },
+    {
+     "bad": "Make sure to **always** run **migrations** before **deploying**.",
+     "better": "Run migrations before you deploy. **The app crashes on start if you don't.**",
+     "note": ""
+    },
+    {
+     "bad": "DO NOT PAY THE CIVIL ENFORCEMENT OFFICER",
+     "better": "Do not pay the traffic warden.",
+     "note": "Human-identified: Plain English Campaign before-and-after (parking ticket)."
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); Research-Based Web Design & Usability Guidelines (usability.gov), ch. 15; CDC Simply Put; Mailchimp Content Style Guide",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-03",
+   "category": "format",
+   "name": "Use prose instead of label-colon bullets",
+   "severity": "warn",
+   "dont": "Bullet lists where each item starts with a bold label and a colon (\"**Performance:** ...\"), especially for content that is one connected argument.",
+   "do": "Write a paragraph. Use a plain list only for discrete, parallel items, and keep the items short.",
+   "rationale": "Inline-header lists fragment reasoning and look templated.",
+   "detect": [
+    "Two or more consecutive bullets starting with **Label:**",
+    "Five or more parallel bullet fragments with no verbs"
+   ],
+   "patterns": [
+    "(?:^|\\n)\\s*[-*•]\\s+\\*\\*[^*\\n]+:?\\*\\*:?\\s"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Reference material (a glossary, a config table, an API field list) can use labeled items.",
+   "examples": [
+    {
+     "bad": "- **Speed:** It's faster.\n- **Cost:** It's cheaper.\n- **Ease:** It's simpler.",
+     "better": "The new runner is about twice as fast and costs half as much, and it needs no custom config.",
+     "note": ""
+    },
+    {
+     "bad": "- **Root cause:** stale cache\n- **Fix:** clear on deploy\n- **Next steps:** add a test",
+     "better": "The cause was a stale cache. I now clear it on every deploy, and I'll add a test that catches this.",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); Declaude (danielrosehill/Declaude); avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-04",
+   "category": "format",
+   "name": "Write plain, sentence-case headings",
+   "severity": "warn",
+   "dont": "Title Case Headings, dramatic or clever headings (\"The Pricing Trap\", \"The Hidden Cost of Convenience\"), emoji in headings, and wrong heading levels (several H1s).",
+   "do": "Use sentence case, and say what the section contains.",
+   "rationale": "A heading is a label for skimming. Clever headings make the reader read the section to learn what it's about.",
+   "detect": [
+    "Three or more capitalized words in a heading",
+    "Heading that is 'The [Adjective] [Noun]' with no topic word",
+    "Emoji in a heading"
+   ],
+   "patterns": [
+    "(?:^|\\n)#{1,6}\\s+(?:[A-Z][a-z]+\\s+){2,}[A-Z][a-z]+\\s*(?:\\n|$)",
+    "(?:^|\\n)#{1,6}\\s+The\\s+(?:Hidden|Real|True|Secret|Pricing|Silent)\\s+\\w+",
+    "(?:^|\\n)#{1,6}\\s+[\\U0001F300-\\U0001FAFF\\U00002600-\\U000027BF]"
+   ],
+   "case_sensitive": true,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Proper nouns keep their capitals.",
+   "examples": [
+    {
+     "bad": "## The Hidden Cost Of Convenience",
+     "better": "## Subscriptions add up",
+     "note": "no-ai-slop example."
+    },
+    {
+     "bad": "## Key Benefits And Considerations",
+     "better": "## Trade-offs",
+     "note": ""
+    },
+    {
+     "bad": "## 🚀 Getting Started",
+     "better": "## Setup",
+     "note": ""
+    },
+    {
+     "bad": "## Seat Belts",
+     "better": "## Wear your seat belt. It could save your life.",
+     "note": "Human-identified: CDC Simply Put: complete-idea headings instead of one-word labels."
+    },
+    {
+     "bad": "## Find a Microsoft Partner",
+     "better": "## Find a Microsoft partner",
+     "note": "Human-identified: Microsoft Writing Style Guide: sentence case."
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); no-ai-slop (realrossmanngroup); CDC Simply Put; Microsoft Writing Style Guide; Mailchimp Content Style Guide",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-05",
+   "category": "format",
+   "name": "Match structure to length",
+   "severity": "warn",
+   "dont": "Headers, bullets, and tables on short answers; headings followed by one line; tables that repeat what the prose said; more than three heading levels.",
+   "do": "Answer short questions in a paragraph. Give each heading at least a few sentences of prose. Use tables only for real comparisons and lists only for discrete items or steps.",
+   "rationale": "Over-structuring fragments the reasoning and makes a simple answer look like a report.",
+   "detect": [
+    "Headings in a reply under ~200 words",
+    "A heading followed by fewer than two sentences",
+    "A table restating earlier prose",
+    "H4 or deeper in a short document",
+    "Formulaic headings: Overview, Introduction, Key Takeaways, Conclusion, in a short piece",
+    "Opposite failure: a chat reply of 4+ sentences on several topics with no paragraph break",
+    "GOV.UK: no more than five sentences per paragraph",
+    "CDC CCI item 8: split lists over seven items; Simply Put: 3-7 items"
+   ],
+   "patterns": [
+    "(?:^|\\n)#{4,}\\s",
+    "(?:^|\\n)#{1,6}\\s[^\\n]+\\n+(?:[-*]\\s[^\\n]+\\n*){1,2}(?=\\n?#|\\Z)",
+    "(?:^|\\n)#{1,6}\\s+(?:Overview|Introduction|Key\\s+Takeaways|Conclusion|Summary|Final\\s+Thoughts)\\s*(?:\\n|$)"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Long reference documents and step-by-step procedures can use more structure.",
+   "examples": [
+    {
+     "bad": "## Answer\n\n- Yes\n\n## Details\n\n- It's supported since v2.",
+     "better": "Yes. Version 2 added it.",
+     "note": ""
+    },
+    {
+     "bad": "| Option | Description |\n|---|---|\n| A | The first option |\n| B | The second option |",
+     "better": "You have two options: A keeps the old schema, and B migrates it.",
+     "note": ""
+    }
+   ],
+   "source": "Declaude (danielrosehill/Declaude); Wikipedia: Signs of AI writing; avoid-ai-writing (conorbronsdon); GOV.UK style guide; Nielsen & Morkes, NN/g (1997); Research-Based Web Design & Usability Guidelines (usability.gov), ch. 15; CDC Simply Put; CDC Clear Communication Index",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-06",
+   "category": "format",
+   "name": "No emoji",
+   "severity": "error",
+   "dont": "Emoji in prose, headings, bullets, commit messages, code comments, or docs.",
+   "do": "Use plain text.",
+   "rationale": "Emoji bullets and headings are a common chatbot tell and look unprofessional in technical writing.",
+   "detect": [
+    "Any emoji character"
+   ],
+   "patterns": [
+    "[\\U0001F300-\\U0001FAFF\\U00002600-\\U000027BF\\U00002B50\\U00002705]"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine when the user asks for them or when quoting UI text that contains them.",
+   "examples": [
+    {
+     "bad": "🚀 Deployed to production! ✅",
+     "better": "Deployed to production.",
+     "note": ""
+    },
+    {
+     "bad": "- ✨ New: dark mode\n- 🐛 Fixed: login bug",
+     "better": "- Added dark mode.\n- Fixed the login redirect bug.",
+     "note": ""
+    },
+    {
+     "bad": "// 🔥 hot path, be careful",
+     "better": "// Hot path: runs on every request.",
+     "note": ""
+    }
+   ],
+   "source": "Declaude (danielrosehill/Declaude); Humanizer (blader/humanizer); Wikipedia: Signs of AI writing; no-ai-slop (realrossmanngroup)",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-07",
+   "category": "format",
+   "name": "Match the destination's markup",
+   "severity": "error",
+   "dont": "Markdown where it won't render (wikitext, plain-text email, Slack fields that don't parse it), curly quotes in code or config, smart apostrophes in shell commands, leaked citation markup.",
+   "do": "Use the target format's own syntax, and straight quotes in anything a machine will parse.",
+   "rationale": "Wrong markup shows up as stray asterisks and pound signs, and curly quotes break code.",
+   "detect": [
+    "Markdown syntax in a non-Markdown destination",
+    "Curly quotes inside code spans, commands, or config",
+    "Leaked tool markup (contentReference, oaicite, utm_source=chatgpt.com)"
+   ],
+   "patterns": [
+    "`[^`]*[‘’“”][^`]*`",
+    "\\b(?:git|npm|curl|echo|export|grep)\\b[^\\n]*[“”‘’]",
+    "contentReference\\[|oaicite|utm_source=(?:chatgpt|openai|copilot)",
+    "cite(?:turn)?\\d*(?:search|news|view)\\d+|【\\d+†"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Curly quotes are fine in typeset prose if the destination uses them consistently.",
+   "examples": [
+    {
+     "bad": "git commit -m “fix login”",
+     "better": "git commit -m \"fix login\"",
+     "note": ""
+    },
+    {
+     "bad": "**Note:** see the [docs](https://example.org) (in a plain-text email)",
+     "better": "Note: see the docs at https://example.org",
+     "note": ""
+    },
+    {
+     "bad": "The study found a 12% drop.:contentReference[oaicite:1]",
+     "better": "The study found a 12% drop (Smith 2024).",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing; Humanizer (blader/humanizer); avoid-ai-writing (conorbronsdon)",
+   "scan": "raw"
+  },
+  {
+   "id": "FMT-08",
+   "category": "format",
+   "name": "Leave no placeholders",
+   "severity": "error",
+   "dont": "Unfilled template text: [Name], [Year], (Add URL here), 2025-XX-XX, example.com/source1, INSERT_URL, TODO left in delivered prose.",
+   "do": "Fill in the real value, or say plainly what is missing and ask for it.",
+   "rationale": "Placeholders in delivered text show it was never read, and they get published by accident.",
+   "detect": [
+    "Square-bracket placeholders",
+    "XX dates",
+    "example.com subpaths",
+    "INSERT_ or ADD_ tokens"
+   ],
+   "patterns": [
+    "\\[(?:Your\\s+)?(?:Name|Year|Date|Company|URL|Title|Founder[^\\]]*|Entertainer'?s\\s+Name)\\]",
+    "\\b20\\d\\d-(?:XX|xx)-(?:XX|xx)\\b",
+    "example\\.com/(?:source|article|news)\\d*",
+    "\\bINSERT_[A-Z_]+\\b",
+    "\\((?:Add|Insert)\\s+[^)]*here\\)"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Templates the user asked for are supposed to have placeholders.",
+   "examples": [
+    {
+     "bad": "Travomate was founded in [Year] by [Founder Names].",
+     "better": "I couldn't find Travomate's founding year or founders. Do you have them?",
+     "note": "Wikipedia example."
+    },
+    {
+     "bad": "access-date=2025-XX-XX",
+     "better": "access-date=2025-11-11",
+     "note": ""
+    },
+    {
+     "bad": "Official website: (Add your URL here)",
+     "better": "(Delete the line, or ask for the URL.)",
+     "note": ""
+    }
+   ],
+   "source": "Wikipedia: Signs of AI writing",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-09",
+   "category": "format",
+   "name": "Don't create files nobody asked for",
+   "severity": "warn",
+   "dont": "Unrequested documentation files (ARCHITECTURE.md, ROADMAP.md, SUMMARY.md, NOTES.md), summary files after a task, and ALL-CAPS filenames other than README.md.",
+   "do": "Put brief instructions in an existing file or in the reply. Create a doc only when asked or when the project can't run without it.",
+   "rationale": "Extra docs go stale, clutter the repo, and repeat what the code or the reply already says.",
+   "detect": [
+    "New .md files the user didn't request",
+    "Uppercase filenames besides README, LICENSE, CHANGELOG"
+   ],
+   "patterns": [
+    "\\b(?:ARCHITECTURE|ROADMAP|GOALS|SUMMARY|NOTES|IMPLEMENTATION|INSTALLATION|CHANGES)(?:_[A-Z]+)*\\.md\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Conventional files are fine: README.md, LICENSE, CHANGELOG.md, CONTRIBUTING.md.",
+   "examples": [
+    {
+     "bad": "I've created IMPLEMENTATION_SUMMARY.md documenting all the changes.",
+     "better": "I changed three files: auth.ts, session.ts, and the login test.",
+     "note": ""
+    },
+    {
+     "bad": "I also added ARCHITECTURE.md and ROADMAP.md for future reference.",
+     "better": "(Don't create them. Mention architecture notes in the reply if they matter.)",
+     "note": ""
+    }
+   ],
+   "source": "Declaude (danielrosehill/Declaude)",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-10",
+   "category": "format",
+   "name": "Hyphenate only compound modifiers",
+   "severity": "warn",
+   "dont": "Hyphens on compounds that aren't modifying a noun or aren't compounds at all: \"in real-time\", \"follow-up with\" (verb), \"set-up the server\" (verb), \"log-in to\" (verb), \"data-set\", \"e-mail\", and long hyphen chains (\"cross-functional, data-driven, cloud-native\").",
+   "do": "Hyphenate before a noun (\"a real-time feed\"), not after a verb (\"updates in real time\"). Use the closed forms: dataset, email, follow up, set up, log in.",
+   "rationale": "Over-hyphenation is a measurable AI habit and a common style error.",
+   "detect": [
+    "Adverbial 'in real-time'",
+    "Hyphenated verb forms followed by a preposition or object",
+    "Three or more hyphenated modifiers in one sentence"
+   ],
+   "patterns": [
+    "\\bin\\s+real-time\\b",
+    "\\b(?:follow-up|set-up|log-in|sign-up|check-out|roll-out)\\s+(?:with|on|to|the|your|a|an)\\b",
+    "\\b(?:data-set|e-mail|web-site|on-line)s?\\b",
+    "(?:\\b[A-Za-z]+-[A-Za-z]+\\b[^.]*){3,}\\."
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Nouns keep their hyphens or closed forms per your style guide (a follow-up, a sign-up form).",
+   "examples": [
+    {
+     "bad": "The dashboard updates in real-time.",
+     "better": "The dashboard updates in real time.",
+     "note": ""
+    },
+    {
+     "bad": "Can you follow-up with the vendor and set-up the server?",
+     "better": "Can you follow up with the vendor and set up the server?",
+     "note": ""
+    },
+    {
+     "bad": "A cross-functional, data-driven, cloud-native, AI-powered team.",
+     "better": "A team of four engineers and a data analyst.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-11",
+   "category": "format",
+   "name": "Keep hashtags to a minimum",
+   "severity": "warn",
+   "dont": "Hashtag stuffing: five or more hashtags on a post, hashtags inside sentences, generic tags (#innovation #leadership #AI #growth).",
+   "do": "Use zero to two specific hashtags at the end, or none.",
+   "rationale": "Hashtag walls read as automated posting and get worse reach on most platforms.",
+   "detect": [
+    "Five or more hashtags in one post",
+    "Hashtags on generic words"
+   ],
+   "patterns": [
+    "(?:#\\w+\\W+){4,}#\\w+",
+    "#\\w+\\s+(?:a\\s+|an\\s+|the\\s+)?#\\w+\\s+#\\w+",
+    "#(?:innovation|leadership|growth|AI|success|motivation|future|tech|business|mindset)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Event or campaign tags the user asked for are fine.",
+   "examples": [
+    {
+     "bad": "Excited to share our launch! #AI #innovation #leadership #growth #startup #future",
+     "better": "We launched today. Here's the demo: (link) #DevTools",
+     "note": ""
+    },
+    {
+     "bad": "We're #hiring a #senior #engineer!",
+     "better": "We're hiring a senior backend engineer.",
+     "note": ""
+    }
+   ],
+   "source": "avoid-ai-writing (conorbronsdon)",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-12",
+   "category": "format",
+   "name": "Use exclamation points rarely",
+   "severity": "warn",
+   "dont": "More than one exclamation point at a time, several in one message, and any exclamation point in an error or warning.",
+   "do": "End with a period. Save one exclamation point for genuine excitement in casual copy.",
+   "rationale": "Mailchimp: never more than one at a time, and never in error messages or alerts. Repeated exclamation points read as forced enthusiasm, a chatbot habit.",
+   "detect": [
+    "!! or more",
+    "Two or more exclamation points in a short message",
+    "An exclamation point in an error, failure, or warning"
+   ],
+   "patterns": [
+    "!{2,}",
+    "\\b(?:error|failed|failure|couldn'?t|can'?t|unable|invalid|denied|warning|wrong)\\b[^.!?\\n]{0,80}!",
+    "\\b(?:oops|whoops|uh[- ]oh)\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "",
+   "examples": [
+    {
+     "bad": "Oops! Something went wrong!",
+     "better": "Something went wrong. Your changes weren't saved. Try again in a minute.",
+     "note": ""
+    },
+    {
+     "bad": "Great job!! Your file uploaded!",
+     "better": "Your file uploaded.",
+     "note": ""
+    }
+   ],
+   "source": "Mailchimp Content Style Guide",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-13",
+   "category": "format",
+   "name": "Punctuate 'but' by the grammar",
+   "severity": "warn",
+   "dont": "Leaving out the comma when 'but' joins two independent clauses, or adding one when 'but' joins two verbs that share a subject.",
+   "do": "Put a comma before 'but' when each side could stand alone as a sentence ('The fix works, but the test still fails'). Leave it out when the second part has no subject of its own ('The fix works but needs a test'). Very short, closely linked clauses may drop the comma.",
+   "rationale": "Standard American usage (Chicago, AP, and most grammar references) puts a comma before a coordinating conjunction that joins two independent clauses. The comma tells the reader a new clause is starting.",
+   "detect": [
+    "'but' followed by a subject and verb with no comma before it",
+    "', but' followed directly by a verb with no subject (compound predicate)"
+   ],
+   "patterns": [
+    "[^,;:\\s]\\s+but\\s+(?:I|you|we|they|he|she|it|this|that|there|the\\s+\\w+)\\s+(?:\\w+\\s+)?(?:is|are|was|were|has|have|had|does|do|did|can|could|will|would|should|may|might|must|still|\\w+s|\\w+ed)\\b",
+    ",\\s+but\\s+(?:is|are|was|were|has|have|had|does|did|can|could|will|would|should|needs?|requires?|fails?|works?)\\b",
+    "[^,;:\\s]\\s+but\\s+\\w+\\s+\\w+\\s+(?:still|also|now|never|always)\\s+\\w+"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "The comma can go when both clauses are very short and closely connected ('It's slow but it works'). A comma before a contrasting phrase without a verb ('still fails, but now on an assertion') is acceptable.",
+   "examples": [
+    {
+     "bad": "The fix handles logged-in users but guest checkout still fails.",
+     "better": "The fix handles logged-in users, but guest checkout still fails.",
+     "note": "Two independent clauses."
+    },
+    {
+     "bad": "The script runs locally, but fails in CI.",
+     "better": "The script runs locally but fails in CI.",
+     "note": "One subject, two verbs: no comma."
+    },
+    {
+     "bad": "I updated the config but the tests still fail.",
+     "better": "I updated the config, but the tests still fail.",
+     "note": ""
+    }
+   ],
+   "source": "Owner decision (style review, Nov 2026); Chicago Manual of Style and AP Stylebook (comma before a conjunction joining independent clauses)",
+   "scan": "prose"
+  },
+  {
+   "id": "FMT-14",
+   "category": "format",
+   "name": "Always use the serial (Oxford) comma",
+   "severity": "warn",
+   "dont": "Lists of three or more items with no comma before the final 'and' or 'or': 'Linux, macOS and Windows'.",
+   "do": "Put a comma before the conjunction in every list of three or more: 'Linux, macOS, and Windows'.",
+   "rationale": "The serial comma prevents misreading when list items contain 'and' or could be read as an appositive, and it keeps lists consistent. Chicago, Microsoft, Google, and Mailchimp all require it; AP is the main guide that doesn't.",
+   "detect": [
+    "Three or more list items with no comma before the final 'and' or 'or'",
+    "Lists inside headings, bullets, and UI strings count too"
+   ],
+   "patterns": [
+    "\\b[\\w'-]+,\\s+(?!(?:or|and|but|not|nor|then|with|without|for|from|in|on|at|to|by|of|as)\\b)[\\w'-]+(?:\\s[\\w'-]+)?\\s+(?:and|or)\\s+[\\w'-]+(?:\\s[\\w'-]+)?[.!?,;:)]",
+    "(?:\\b[\\w'-]+(?:\\s[\\w'-]+)?,\\s+){2,}[\\w'-]+(?:\\s[\\w'-]+)?\\s+(?:and|or)\\s+[\\w'-]+",
+    "(?:^|[:(]\\s*|\\b(?:like|including|such\\s+as|both|either|from)\\s+)[\\w'-]+,\\s+[\\w'-]+\\s+(?:and|or)\\s+[\\w'-]+"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Quoted text keeps its original punctuation. Items that themselves contain 'and' ('rise and grind') can trip the pattern; check by eye.",
+   "examples": [
+    {
+     "bad": "We support Linux, macOS and Windows.",
+     "better": "We support Linux, macOS, and Windows.",
+     "note": ""
+    },
+    {
+     "bad": "Android, iOS and Windows",
+     "better": "Android, iOS, and Windows",
+     "note": "Human-identified: Microsoft Writing Style Guide, top 10 tips."
+    },
+    {
+     "bad": "I thanked my parents, Ayn Rand and God.",
+     "better": "I thanked my parents, Ayn Rand, and God.",
+     "note": "The classic ambiguity: without the comma, the last two items can read as a description of the parents."
+    },
+    {
+     "bad": "Choose daily, weekly or monthly backups.",
+     "better": "Choose daily, weekly, or monthly backups.",
+     "note": ""
+    }
+   ],
+   "source": "Owner decision (style review, Nov 2026); Microsoft Writing Style Guide (top 10 tips); Google developer documentation style guide; Mailchimp Content Style Guide",
+   "scan": "prose"
+  },
+  {
+   "id": "FIC-01",
+   "category": "fiction",
+   "name": "Avoid stock fiction phrasing",
+   "severity": "error",
+   "dont": "The phrases LLM fiction repeats most, per Antislop's measured lists: took a deep breath, voice barely above a whisper, couldn't help but feel, couldn't shake the feeling, a shiver down (her) spine, casting long shadows, heart pounding in (his) chest, the air was thick with, words hung in the air, a mixture of, something akin to, a newfound sense of purpose, eyes never leaving, ready to face whatever challenges lay ahead, little did (he) know, days turned into weeks.",
+   "do": "Write the specific physical action or detail this character in this scene would have. If a beat adds nothing, cut it.",
+   "rationale": "These phrases are statistically over-represented in model-written stories by large factors. Readers of AI fiction recognize them on sight.",
+   "detect": [
+    "Any listed phrase",
+    "More than one breath/whisper/shiver beat per scene"
+   ],
+   "patterns": [
+    "\\btook\\s+a\\s+deep\\s+breath\\b|\\bvoice\\s+(?:barely\\s+(?:above\\s+)?a\\s+whisper|barely\\s+audible)\\b|\\bcouldn'?t\\s+(?:help\\s+but\\s+(?:feel|wonder|notice)|shake\\s+the\\s+feeling)\\b",
+    "\\b(?:shiver|chill)\\s+(?:ran|run|runs|down)\\b[^.]*\\bspine\\b|\\bcasting\\s+long\\s+shadows\\b|\\bheart\\s+(?:pounding|hammered|hammering)\\b|\\bthe\\s+air\\s+(?:was|hung)\\s+thick\\s+with\\b|\\bwords\\s+hung\\s+in\\s+the\\s+air\\b",
+    "\\b(?:a|with\\s+a)\\s+mixture\\s+of\\b|\\bsomething\\s+akin\\s+to\\b|\\bnewfound\\s+sense\\s+of\\b|\\beyes\\s+never\\s+leaving\\b|\\bwhatever\\s+challenges\\s+lay\\s+ahead\\b|\\blittle\\s+did\\s+\\w+\\s+know\\b|\\bdays\\s+turned\\s+into\\s+weeks\\b"
+   ],
+   "case_sensitive": false,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine in deliberate pastiche or when the cliché is the joke.",
+   "examples": [
+    {
+     "bad": "She took a deep breath, her voice barely above a whisper. \"We need to go.\"",
+     "better": "\"We need to go,\" she said, already pulling on her boots.",
+     "note": ""
+    },
+    {
+     "bad": "He couldn't shake the feeling that something was wrong. A shiver ran down his spine.",
+     "better": "The porch light was off. He'd left it on.",
+     "note": ""
+    },
+    {
+     "bad": "Days turned into weeks, and she found a newfound sense of purpose.",
+     "better": "By March she was at the workshop every morning before seven.",
+     "note": ""
+    }
+   ],
+   "source": "Antislop (sam-paech)",
+   "scan": "prose"
+  },
+  {
+   "id": "FIC-02",
+   "category": "fiction",
+   "name": "Don't use default AI character and place names",
+   "severity": "warn",
+   "dont": "Names LLMs reach for constantly: Elara, Kael, Lyra, Elias, Silas, Thorne, Aria, Elian, Mara, Lila, Seraphina, Zephyr; places like Eldoria, Oakhaven, Whisperwood, Ravenswood, Moonwhisper.",
+   "do": "Choose names that fit the setting's culture, era, and class, the way a writer researching the setting would.",
+   "rationale": "These names top Antislop's frequency lists by wide margins. One of them in the first line marks a story as generated.",
+   "detect": [
+    "Any listed name for an original character or place"
+   ],
+   "patterns": [
+    "\\b(?:Elara|Kael|Lyra|Elias|Silas|Thorne|Elian|Seraphina|Zephyr(?:ia)?|Eldoria|Oakhaven|Whisperwood|Ravenswood|Moonwhisper|Elysia|Eira)\\b"
+   ],
+   "case_sensitive": true,
+   "min_matches": 1,
+   "scope": "sentence",
+   "exceptions": "Fine when the user supplies the name or the character is an existing one.",
+   "examples": [
+    {
+     "bad": "Elara Thorne stood at the edge of Whisperwood.",
+     "better": "Dot Kowalski stood at the edge of the county landfill.",
+     "note": ""
+    },
+    {
+     "bad": "Kael and Lyra rode toward Eldoria.",
+     "better": "Ahmet and his sister rode toward Konya.",
+     "note": ""
+    }
+   ],
+   "source": "Antislop (sam-paech)",
+   "scan": "prose"
+  }
+ ]
+}

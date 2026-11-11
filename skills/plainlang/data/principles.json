@@ -1,0 +1,556 @@
+[
+ {
+  "caveats": "Pinker notes that empathy alone doesn't fix this: people are poor at guessing what others don't know, so test with readers.",
+  "evidence": "",
+  "guidance": [
+   "Picture one real reader; Buffett wrote SEC filings as if to his two smart, non-expert sisters.",
+   "Plan for the reader's task: find, understand, use.",
+   "Assume the reader knows less than you think. Pinker calls the gap the curse of knowledge."
+  ],
+  "id": "P01",
+  "rule_ids": [
+   "CLR-01",
+   "CLR-08",
+   "CLR-09",
+   "CLR-15"
+  ],
+  "sources": [
+   {
+    "name": "SEC, A Plain English Handbook (1998)",
+    "url": "https://www.sec.gov/pdf/handbook.pdf"
+   },
+   {
+    "name": "Federal Plain Language Guidelines",
+    "url": "https://digital.gov/guides/plain-language"
+   },
+   {
+    "name": "Pinker, The curse of knowledge (APS Observer)",
+    "url": "https://www.psychologicalscience.org/observer/the-curse-of-knowledge-pinker-describes-a-key-cause-of-bad-writing"
+   }
+  ],
+  "summary": "Clear writing starts before the first sentence: decide who will read it, what they already know, and what they must do afterward.",
+  "title": "Know the reader and what they need to do"
+ },
+ {
+  "caveats": "",
+  "evidence": "In Kimble's survey of 251 Michigan lawyers, 61% preferred the plain-language judicial opinion; an opening summary was one of the top reasons.",
+  "guidance": [
+   "U.S. Army correspondence standard: bottom line up front (BLUF).",
+   "Web readers scan; NN/g recommends the inverted pyramid.",
+   "ClearMark judges praised an opening statement of purpose and required action."
+  ],
+  "id": "P02",
+  "rule_ids": [
+   "ORD-01",
+   "ORD-03",
+   "CLR-15"
+  ],
+  "sources": [
+   {
+    "name": "BLUF / Army Regulation 25-50",
+    "url": "https://en.wikipedia.org/wiki/BLUF_(communication)"
+   },
+   {
+    "name": "Kimble, Michigan Bar Journal (2016)",
+    "url": "https://www.michbar.org/file/barjournal/article/documents/pdf4article2972.pdf"
+   },
+   {
+    "name": "2026 ClearMark winners",
+    "url": "https://centerforplainlanguage.org/awards/clearmark/2026-clearmark-awards-winners/"
+   }
+  ],
+  "summary": "Lead with the conclusion, answer, or required action. Background follows.",
+  "title": "Put the main point first"
+ },
+ {
+  "caveats": "Nominalizations can name real abstractions (Sword). The passive is right when the actor is unknown or irrelevant (GOV.UK). Pullum showed that Strunk & White misidentified most of their 'passive' examples, so check before 'fixing'.",
+  "evidence": "",
+  "guidance": [
+   "Diagnose: compare the sentence's subject and verb with the story's real character and action.",
+   "Turn hidden verbs (analysis, management, application) back into verbs.",
+   "Prefer active voice when the actor matters.",
+   "Zinsser: find the people behind the product or story; real people are more compelling than abstract nouns."
+  ],
+  "id": "P03",
+  "rule_ids": [
+   "ACT-01",
+   "ACT-02",
+   "ACT-03",
+   "ACT-04",
+   "ACT-05"
+  ],
+  "sources": [
+   {
+    "name": "Williams & Bizup, Style: Lessons in Clarity and Grace",
+    "url": ""
+   },
+   {
+    "name": "Sword, Zombie Nouns (NYT, 2012)",
+    "url": "https://yale-nus.edu.sg/academics/wp-content/uploads/sites/8/2021/12/Nominalizations-Are-Zombie-Nouns-The-New-York-Times.pdf"
+   },
+   {
+    "name": "Federal Plain Language Guidelines",
+    "url": "https://digital.gov/guides/plain-language/writing"
+   },
+   {
+    "name": "Zinsser, On Writing Well, ch. 16 (LitCharts)",
+    "url": "https://www.litcharts.com/lit/on-writing-well/chapter-16-business-writing-writing-in-your-job"
+   }
+  ],
+  "summary": "The clearest sentences tell a small story: who did what. Put the actor in the subject and the action in the verb.",
+  "title": "Make characters subjects and actions verbs"
+ },
+ {
+  "caveats": "Gopen and Swan present these as expectations a writer can break for effect, not rules.",
+  "evidence": "",
+  "guidance": [
+   "Put the verb right after the subject.",
+   "Start with old, linking information; end with the new.",
+   "Keep each paragraph's topics consistent (topic strings)."
+  ],
+  "id": "P04",
+  "rule_ids": [
+   "CLR-02",
+   "CLR-03",
+   "WORD-04",
+   "ORD-07"
+  ],
+  "sources": [
+   {
+    "name": "Gopen & Swan, The Science of Scientific Writing (1990)",
+    "url": "https://wstomv.win.tue.nl/quotes/science-of-scientific-writing.html"
+   },
+   {
+    "name": "Williams & Bizup, Style",
+    "url": ""
+   }
+  ],
+  "summary": "Readers expect context at the start of a sentence and emphasis at the end, and the verb soon after the subject.",
+  "title": "Meet the reader's structural expectations"
+ },
+ {
+  "caveats": "The target is needless complexity. Precise technical terms are fine when the reader knows them or you define them.",
+  "evidence": "Oppenheimer's five experiments (Applied Cognitive Psychology) found readers judged writers who used needlessly complex words as less intelligent.",
+  "guidance": [
+   "Orwell's rule 2: never use a long word where a short one will do.",
+   "GOV.UK and 18F publish words-to-avoid lists (utilize, facilitate, leverage, deliver for abstract things).",
+   "Use the words your users search for.",
+   "The federal guidelines publish a 'dirty dozen' to replace first: addressees, assist, commence, implement, in accordance with, in order that, in the amount of, in the event of, it is, promulgate, this activity, utilize.",
+   "Zinsser's clutter list: 'personal friend', 'at the present time', 'assistance' for help, buzzwords, 'I might add'. CDC's Everyday Words maps about 100 public-health terms to everyday ones."
+  ],
+  "id": "P05",
+  "rule_ids": [
+   "CLR-07",
+   "WORD-02",
+   "WORD-06",
+   "WORD-07",
+   "WORD-10",
+   "WORD-12"
+  ],
+  "sources": [
+   {
+    "name": "Orwell, Politics and the English Language",
+    "url": "https://en.wikipedia.org/wiki/Politics_and_the_English_Language"
+   },
+   {
+    "name": "GOV.UK clear language",
+    "url": "https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/writing-guidelines/clear-language/"
+   },
+   {
+    "name": "18F plain language",
+    "url": "https://guides.18f.org/content-guide/our-approach/plain-language/"
+   },
+   {
+    "name": "Readability Guidelines: words to avoid",
+    "url": "https://readabilityguidelines.netlify.com/clear-language/words-to-avoid/"
+   },
+   {
+    "name": "Federal Plain Language Guidelines: Use simple words and phrases (archived)",
+    "url": "https://web.archive.org/web/2023/https://www.plainlanguage.gov/guidelines/words/use-simple-words-phrases/"
+   },
+   {
+    "name": "CDC Everyday Words",
+    "url": "https://www.cdc.gov/other/pdf/EverydayWordsForPublicHealthCommunication.pdf"
+   }
+  ],
+  "summary": "Choose the everyday word your reader would use: buy, help, about, start.",
+  "title": "Use short, familiar words"
+ },
+ {
+  "caveats": "Length is a proxy. A long sentence that is a simple list can read easily. NIH's Clear & Simple warns that writing to a readability formula can produce choppy text and drop useful familiar words.",
+  "evidence": "In the studies Kimble reports, preferred plain versions averaged 18 to 19 words per sentence, down from about 25.",
+  "guidance": [
+   "GOV.UK: split sentences over 25 words; no more than 5 sentences per paragraph.",
+   "Microsoft: bigger ideas, fewer words.",
+   "Federal guidelines: one idea per sentence; paragraphs of no more than 150 words in three to eight sentences, never over 250.",
+   "Sentence targets vary by source: Simply Put 8-10 words; Flesch 15 (conversational) to 20 (plain); HHS, usability.gov, and STE instructions 20; GOV.UK, Mailchimp, and STE descriptions 25. Paragraphs: HHS 3 lines on the web; Simply Put 3-5 sentences; usability.gov and STE 6 or fewer."
+  ],
+  "id": "P06",
+  "rule_ids": [
+   "ORD-02",
+   "CLR-14",
+   "ORD-05",
+   "FILL-07"
+  ],
+  "sources": [
+   {
+    "name": "GOV.UK clear language",
+    "url": "https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/writing-guidelines/clear-language/"
+   },
+   {
+    "name": "Microsoft Writing Style Guide",
+    "url": "https://learn.microsoft.com/style-guide/top-10-tips-style-voice"
+   },
+   {
+    "name": "Kimble (2016)",
+    "url": "https://www.michbar.org/file/barjournal/article/documents/pdf4article2972.pdf"
+   },
+   {
+    "name": "Federal Plain Language Guidelines: Write short paragraphs (archived)",
+    "url": "https://web.archive.org/web/2023/https://www.plainlanguage.gov/guidelines/concise/write-short-paragraphs/"
+   },
+   {
+    "name": "HHS Health Literacy Online 2.6",
+    "url": "https://odphp.health.gov/healthliteracyonline/2016/write/section-2-6/"
+   },
+   {
+    "name": "usability.gov guidelines ch. 15",
+    "url": "https://webarchive.library.unt.edu/eot2008/20080916213614/http:/usability.gov/pdfs/chapter15.pdf"
+   },
+   {
+    "name": "Flesch, How to Write Plain English, ch. 2",
+    "url": "https://pages.stern.nyu.edu/~wstarbuc/Writing/Flesch.htm"
+   }
+  ],
+  "summary": "One idea per sentence, one topic per paragraph.",
+  "title": "Keep sentences and paragraphs short"
+ },
+ {
+  "caveats": "",
+  "evidence": "",
+  "guidance": [
+   "SEC ladder: asset, investment, security, equity, stock, common stock, one share of IBM common stock.",
+   "Give an example for every abstract claim (Pinker).",
+   "Pinker's classic style: write as if pointing at something the reader can see."
+  ],
+  "id": "P07",
+  "rule_ids": [
+   "CLR-06",
+   "CLR-09",
+   "WORD-03",
+   "WORD-05",
+   "WORD-13"
+  ],
+  "sources": [
+   {
+    "name": "SEC Plain English Handbook",
+    "url": "https://www.sec.gov/pdf/handbook.pdf"
+   },
+   {
+    "name": "Pinker (APS Observer)",
+    "url": "https://www.psychologicalscience.org/observer/the-curse-of-knowledge-pinker-describes-a-key-cause-of-bad-writing"
+   }
+  ],
+  "summary": "Name the thing, the number, the person. Go down the ladder of abstraction.",
+  "title": "Be concrete and specific"
+ },
+ {
+  "caveats": "For the objective-only version, only the satisfaction gain was statistically significant; task time, errors and memory improved but not significantly. The scannable version scored slightly lower than the control on memory. It is one 1997 study on one small site.",
+  "evidence": "Morkes and Nielsen (1997) tested 51 users on five versions of a travel site. Against a promotional control, overall usability was 58% better for the concise version (about half the words), 47% for scannable, 27% for objective, and 124% for all three combined. A later rewrite of real Sun web pages scored 159% better.",
+  "guidance": [
+   "Concise: about half the words.",
+   "Scannable: headings, lists, highlighted keywords, one idea per paragraph.",
+   "Objective: no marketing claims."
+  ],
+  "id": "P08",
+  "rule_ids": [
+   "FILL-07",
+   "FMT-05",
+   "WORD-10",
+   "CLR-14"
+  ],
+  "sources": [
+   {
+    "name": "Morkes & Nielsen, Concise, SCANNABLE, and Objective (NN/g, 1997)",
+    "url": "https://www.nngroup.com/articles/concise-scannable-and-objective-how-to-write-for-the-web/"
+   }
+  ],
+  "summary": "Cut words, make text easy to scan, and drop promotional tone.",
+  "title": "Be concise, scannable, and objective"
+ },
+ {
+  "caveats": "",
+  "evidence": "",
+  "guidance": [
+   "Use 'you' (Google, plainlanguage.gov).",
+   "Present tense is simplest; limit conditionals.",
+   "Use 'must' for requirements, 'can' for options; avoid 'shall'.",
+   "Turn negatives into positives (SEC)."
+  ],
+  "id": "P09",
+  "rule_ids": [
+   "CLR-01",
+   "CLR-04",
+   "CLR-05",
+   "CLR-10",
+   "ACT-03"
+  ],
+  "sources": [
+   {
+    "name": "Google developer documentation style guide",
+    "url": "https://developers.google.com/style/highlights"
+   },
+   {
+    "name": "Federal Plain Language Guidelines",
+    "url": "https://digital.gov/guides/plain-language/writing"
+   },
+   {
+    "name": "GOV.UK clear language",
+    "url": "https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/writing-guidelines/clear-language/"
+   }
+  ],
+  "summary": "Address the reader directly, describe how things work now, and say what is true rather than what isn't.",
+  "title": "Speak to the reader: you, present tense, positive"
+ },
+ {
+  "caveats": "",
+  "evidence": "",
+  "guidance": [
+   "Avoid idioms, slang, and culture-bound references (seasons, holidays, sports).",
+   "Keep helper words: that, then, of.",
+   "Put conditions before instructions.",
+   "Use one term per concept.",
+   "Keep optional words (that, the, then) and repeat verbs and subjects for clarity (Microsoft, Mailchimp).",
+   "Avoid -ing and -ed words whose role is ambiguous (Microsoft, Mailchimp, STE).",
+   "Choose words with one meaning: because, not since; after, not once (Microsoft, Mailchimp).",
+   "Controlled languages like ASD-STE100 go further: about 900 approved words, one meaning each."
+  ],
+  "id": "P10",
+  "rule_ids": [
+   "CLR-13",
+   "CLR-21",
+   "WORD-11",
+   "WORD-01",
+   "WORD-09"
+  ],
+  "sources": [
+   {
+    "name": "Google: Write for a global audience",
+    "url": "https://developers.google.com/style/translation"
+   },
+   {
+    "name": "Microsoft: Global writing tips",
+    "url": "https://learn.microsoft.com/en-us/style-guide/global-communications/writing-tips"
+   },
+   {
+    "name": "Mailchimp: Writing for translation",
+    "url": "https://styleguide.mailchimp.com/writing-for-translation/"
+   },
+   {
+    "name": "Simplified Technical English (Wikipedia)",
+    "url": "https://en.wikipedia.org/wiki/Simplified_Technical_English"
+   }
+  ],
+  "summary": "Plain, literal English translates and survives non-native reading.",
+  "title": "Write for global readers"
+ },
+ {
+  "caveats": "Over-structuring short answers is its own fault (see FMT-05).",
+  "evidence": "",
+  "guidance": [
+   "Use numbered lists for steps and bulleted lists for other parallel items.",
+   "Use headings that describe content.",
+   "ClearMark judges repeatedly praise headings, white space, and a 'quick takeaway' at the top."
+  ],
+  "id": "P11",
+  "rule_ids": [
+   "CLR-11",
+   "CLR-12",
+   "FMT-03",
+   "FMT-04",
+   "FMT-05",
+   "CLR-19",
+   "CLR-20"
+  ],
+  "sources": [
+   {
+    "name": "2026 ClearMark winners",
+    "url": "https://centerforplainlanguage.org/awards/clearmark/2026-clearmark-awards-winners/"
+   },
+   {
+    "name": "Google style highlights",
+    "url": "https://developers.google.com/style/highlights"
+   }
+  ],
+  "summary": "Layout is part of clarity: headings that say what's in the section, numbered steps, tables for comparisons, checklists for actions.",
+  "title": "Design for the task"
+ },
+ {
+  "caveats": "Treat this rule set's regex hits the same way: as prompts to look, not verdicts.",
+  "evidence": "Jarrett reports a study where formula-driven edits lowered scores by up to six grade levels without improving comprehension.",
+  "guidance": [
+   "Use paraphrase testing, usability testing, or the plus-minus technique.",
+   "Test early and at least twice.",
+   "If you can't reach real readers, ask someone unfamiliar with the topic to read aloud and explain.",
+   "NIH: one comment that reveals a misunderstanding of a key concept deserves attention, since others may share it silently.",
+   "NIH: test comprehension, attractiveness, and acceptability; never rely on expert review alone."
+  ],
+  "id": "P12",
+  "rule_ids": [
+   "CLR-18"
+  ],
+  "sources": [
+   {
+    "name": "digital.gov: Test for understanding",
+    "url": "https://digital.gov/guides/plain-language/test"
+   },
+   {
+    "name": "Jarrett, Readability formulas: seven reasons to avoid them",
+    "url": "https://www.effortmark.co.uk/?p=3586"
+   },
+   {
+    "name": "NIH Clear & Simple",
+    "url": "https://www.nih.gov/institutes-nih/nih-office-director/office-communications-public-liaison/clear-communication/clear-simple"
+   }
+  ],
+  "summary": "The only reliable test of clarity is whether readers can find, understand, and act on the text.",
+  "title": "Test with real readers, not formulas"
+ },
+ {
+  "caveats": "",
+  "evidence": "",
+  "guidance": [
+   "Orwell's sixth rule: break any of these rules sooner than say anything barbarous.",
+   "Gopen and Swan: reader expectations can be broken deliberately.",
+   "Linguists (Pullum, Liberman) warn that mechanical style rules misfire."
+  ],
+  "id": "P13",
+  "rule_ids": [],
+  "sources": [
+   {
+    "name": "Orwell, Politics and the English Language",
+    "url": "https://en.wikipedia.org/wiki/Politics_and_the_English_Language"
+   },
+   {
+    "name": "Language Log, The redemption of zombie nouns",
+    "url": "https://languagelog.ldc.upenn.edu/nll/?p=4095"
+   },
+   {
+    "name": "Pullum, The Grammarians Have No Clothes",
+    "url": "https://www.wilsonquarterly.com/quarterly/_/the-grammarians-have-no-clothes/"
+   }
+  ],
+  "summary": "Every rule here has exceptions. Clarity for this reader beats compliance with a list.",
+  "title": "Treat guidelines as guidelines"
+ },
+ {
+  "caveats": "",
+  "evidence": "HHS cites self-efficacy, a person's belief they can succeed, as a strong predictor of health behavior; small steps and relatable stories build it.",
+  "guidance": [
+   "Give one main message and a call to action (CDC CCI items 1, 5).",
+   "Break behaviors into small steps the reader can start now (HHS 2.5).",
+   "Explain why each step matters and what the reader gains (CCI 13; HHS 2.4).",
+   "Stay positive: focus on tips for overcoming barriers, not the barriers (HHS 2.4)."
+  ],
+  "id": "P14",
+  "rule_ids": [
+   "CLR-16",
+   "CLR-05",
+   "ORD-01"
+  ],
+  "sources": [
+   {
+    "name": "CDC Clear Communication Index",
+    "url": "https://www.cdc.gov/ccindex/tool"
+   },
+   {
+    "name": "HHS Health Literacy Online, Write",
+    "url": "https://odphp.health.gov/healthliteracyonline/2016/write/"
+   },
+   {
+    "name": "CDC Simply Put",
+    "url": "https://cdc.gov/health-literacy/pdf/Simply_Put.pdf"
+   }
+  ],
+  "summary": "Clear isn't enough if the reader can't act. Say what to do, how, and why it's worth doing.",
+  "title": "Make it actionable"
+ },
+ {
+  "caveats": "The full standard is paywalled; this summary comes from the federation that drafted it.",
+  "evidence": "",
+  "guidance": [
+   "Relevant: readers get what they need.",
+   "Findable: they can easily find it.",
+   "Understandable: they can easily understand it.",
+   "Usable: they can easily use it.",
+   "Only about 7% of the standard's roughly 485 ideas are about word choice; most are about structure, findability, and design."
+  ],
+  "id": "P15",
+  "rule_ids": [
+   "CLR-15",
+   "CLR-19",
+   "CLR-20"
+  ],
+  "sources": [
+   {
+    "name": "International Plain Language Federation: ISO 24495-1",
+    "url": "https://www.iplfederation.org/the-iso-plain-language-standard-part1"
+   }
+  ],
+  "summary": "The ISO standard defines plain language by outcomes for the reader, not by word lists.",
+  "title": "Plain language is relevant, findable, understandable, usable"
+ },
+ {
+  "caveats": "",
+  "evidence": "",
+  "guidance": [
+   "Use whole numbers and natural frequencies ('1 in 4').",
+   "Explain what each number means: high or low, better or worse than expected.",
+   "Do conversions and calculations for the reader; keep denominators constant.",
+   "Prefer absolute risk to relative risk; explain any probability in words or a visual."
+  ],
+  "id": "P16",
+  "rule_ids": [
+   "CLR-17"
+  ],
+  "sources": [
+   {
+    "name": "CDC Clear Communication Index, Part C-D",
+    "url": "https://www.cdc.gov/ccindex/tool"
+   },
+   {
+    "name": "CDC Simply Put",
+    "url": "https://cdc.gov/health-literacy/pdf/Simply_Put.pdf"
+   }
+  ],
+  "summary": "Numbers inform only when readers can interpret them without math.",
+  "title": "Present numbers people can use"
+ },
+ {
+  "caveats": "Written for public health materials; items like 'supporting visual' don't apply to chat replies.",
+  "evidence": "CDC developed the Index from research literature and expert review for public-facing materials.",
+  "guidance": [
+   "Core (all materials): one main message; at the top; visually emphasized; a supporting visual; a call to action; active voice in the main message; everyday words; lists; chunks with headings; key information first; uncertainty acknowledged.",
+   "Behavior (when asking for action): a recommendation; why it matters; how to do it.",
+   "Numbers: familiar forms; meaning explained; no math required.",
+   "Risk: nature of the risk; risks and benefits; probabilities explained in words.",
+   "Before writing, answer five planning questions: audience, audience research, objectives, format and channel, pretesting plan."
+  ],
+  "id": "P17",
+  "rule_ids": [
+   "ORD-01",
+   "CLR-16",
+   "CLR-17",
+   "CLR-18",
+   "CLR-08"
+  ],
+  "sources": [
+   {
+    "name": "CDC Clear Communication Index user guide",
+    "url": "https://Cdc.gov/ccindex/pdf/clear-communication-user-guide.pdf"
+   }
+  ],
+  "summary": "A checklist makes clarity reviewable. CDC's Clear Communication Index is a research-based example: 20 yes/no items, passing score 90 out of 100.",
+  "title": "Score drafts with a checklist"
+ }
+]

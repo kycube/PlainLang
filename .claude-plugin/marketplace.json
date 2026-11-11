@@ -1,0 +1,11 @@
+{
+  "name": "plainlang",
+  "owner": { "name": "Kyle" },
+  "plugins": [
+    {
+      "name": "plainlang",
+      "source": "./",
+      "description": "Check and revise prose for clarity and AI-writing tells."
+    }
+  ]
+}
