@@ -54,7 +54,7 @@ Rules fall into eight groups:
 | Formatting and output | FMT | Structure, emphasis, punctuation, placeholders |
 | Fiction | FIC | Stock phrases and names (opt-in) |
 
-`skills/plainlang/references/principles.md` explains why each group exists, with the research behind it. `skills/plainlang/references/examples.md` collects 52 examples that editors, award juries, and researchers singled out as good or bad.
+`skills/plainlang/references/principles.md` explains why each group exists, with the research behind it. `skills/plainlang/references/examples.md` collects 50 examples that editors, award juries, and researchers singled out as good or bad.
 
 ## Limits
 

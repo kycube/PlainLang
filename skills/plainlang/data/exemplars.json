@@ -698,34 +698,6 @@
   "year": ""
  },
  {
-  "id": "X48",
-  "identified_by": "Mailchimp Content Style Guide",
-  "kind": "pair",
-  "rewrite": "Stand in line to get a donut.",
-  "rule_ids": [
-   "CLR-05"
-  ],
-  "source_url": "https://styleguide.mailchimp.com/grammar-and-mechanics/",
-  "text": "You can't get a donut if you don't stand in line.",
-  "verbatim": true,
-  "why": "Two negatives replaced by one positive instruction.",
-  "year": ""
- },
- {
-  "id": "X49",
-  "identified_by": "Mailchimp Content Style Guide",
-  "kind": "pair",
-  "rewrite": "Select from these options: (numbered list)",
-  "rule_ids": [
-   "CLR-20"
-  ],
-  "source_url": "https://styleguide.mailchimp.com/writing-for-accessibility/",
-  "text": "Select from the options in the right sidebar.",
-  "verbatim": true,
-  "why": "Directional language fails when the layout changes.",
-  "year": ""
- },
- {
   "id": "X50",
   "identified_by": "William Zinsser, On Writing Well (a university president's phrase)",
   "kind": "bad",

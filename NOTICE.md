@@ -17,8 +17,11 @@ PlainLang's code and its rule text are MIT-licensed (see LICENSE). The rules quo
 - GOV.UK guidance: Open Government Licence v3.0
 - Google developer documentation style guide: CC BY 4.0
 - Microsoft Writing Style Guide: CC BY 4.0
-- Mailchimp Content Style Guide: CC BY-NC 4.0 (a few short examples; noncommercial terms apply to those excerpts)
 - Wikipedia, Signs of AI writing and Simplified Technical English: CC BY-SA 4.0 (summarized, not copied)
+
+## Ideas cited, not copied
+
+- Mailchimp Content Style Guide. Several rules follow its guidance, restated in this project's own words. The repo contains no Mailchimp text, so its CC BY-NC license does not apply.
 
 ## Quoted briefly for commentary
 

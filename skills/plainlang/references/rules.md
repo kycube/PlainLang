@@ -350,7 +350,7 @@ Sources: Mailchimp Content Style Guide; Google developer documentation style gui
 
 | Don't write | Write instead |
 |---|---|
-| Select from the options in the right sidebar. | Select one of these options:<br>1. Daily<br>2. Weekly |
+| Choose a plan from the left-hand panel. | Choose one of these plans:<br>1. Free<br>2. Pro |
 | Click the green button. | Click Save. |
 
 Sources: Mailchimp Content Style Guide; Google developer documentation style guide; HHS Health Literacy Online (2016)

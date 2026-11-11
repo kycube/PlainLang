@@ -256,9 +256,9 @@
      "note": ""
     },
     {
-     "bad": "You can't get a donut if you don't stand in line.",
-     "better": "Stand in line to get a donut.",
-     "note": "Human-identified: Mailchimp Content Style Guide."
+     "bad": "You can't deploy without running the migrations.",
+     "better": "Run the migrations before you deploy.",
+     "note": "Negative instruction turned into a positive step."
     },
     {
      "bad": "Do not ride your bicycle without wearing a helmet.",
@@ -970,9 +970,9 @@
    "exceptions": "'Below' is fine for a document's own structure in print, such as 'the table below' when the table follows immediately.",
    "examples": [
     {
-     "bad": "Select from the options in the right sidebar.",
-     "better": "Select one of these options:\n1. Daily\n2. Weekly",
-     "note": "Human-identified: Mailchimp Content Style Guide, writing for accessibility."
+     "bad": "Choose a plan from the left-hand panel.",
+     "better": "Choose one of these plans:\n1. Free\n2. Pro",
+     "note": "The panel may not be on the left on a phone or in a screen reader."
     },
     {
      "bad": "Click the green button.",
@@ -1013,7 +1013,7 @@
     {
      "bad": "Once the job finishes, deploy.",
      "better": "After the job finishes, deploy.",
-     "note": "Human-identified: Mailchimp Content Style Guide, writing for translation."
+     "note": "'Once' can mean 'one time' or 'after'. Mailchimp's translation guidance and Microsoft's global-writing tips both flag it."
     },
     {
      "bad": "Make sure the setting is right.",

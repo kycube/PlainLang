@@ -369,22 +369,6 @@ Writing that people (editors, award juries, style-guide authors, researchers) si
 - **Rules:** CLR-21
 - **Source:** https://learn.microsoft.com/ko-kr/style-guide/word-choice/use-simple-words-concise-sentences
 
-## X48 Before / after: Mailchimp Content Style Guide
-
-- **Before:** You can't get a donut if you don't stand in line.
-- **After:** Stand in line to get a donut.
-- **Why:** Two negatives replaced by one positive instruction.
-- **Rules:** CLR-05
-- **Source:** https://styleguide.mailchimp.com/grammar-and-mechanics/
-
-## X49 Before / after: Mailchimp Content Style Guide
-
-- **Before:** Select from the options in the right sidebar.
-- **After:** Select from these options: (numbered list)
-- **Why:** Directional language fails when the layout changes.
-- **Rules:** CLR-20
-- **Source:** https://styleguide.mailchimp.com/writing-for-accessibility/
-
 ## X50 Bad: William Zinsser, On Writing Well (a university president's phrase)
 
 - **Before:** very considerable potentially explosive expressions of dissatisfaction

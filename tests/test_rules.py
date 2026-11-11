@@ -20,7 +20,7 @@ EXEMPLARS = json.loads((SKILL / "data" / "exemplars.json").read_text(encoding="u
 # examples, judgment calls, or rules that only fire above a threshold (TPL-02, FMT-01).
 # If you fix one, delete it here; if a change makes a new one, the test fails.
 KNOWN_MISSES = {
-    "CLR-05#3", "CLR-06#1", "CLR-08#1", "CLR-08#2", "CLR-08#3", "CLR-17#1", "CLR-17#2", "CLR-17#3",
+    "CLR-06#1", "CLR-08#1", "CLR-08#2", "CLR-08#3", "CLR-17#1", "CLR-17#2", "CLR-17#3",
     "CLR-21#2", "WORD-01#4", "WORD-02#4", "WORD-11#3", "WORD-11#4", "TPL-02#0", "TPL-02#1", "TPL-02#2",
     "FILL-07#5", "ORD-01#3", "ORD-02#2", "ORD-02#3", "ORD-02#4", "FMT-01#2", "FMT-04#3", "FMT-04#4",
     "FMT-05#1", "FMT-07#1",
